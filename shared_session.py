@@ -10,6 +10,12 @@ os.makedirs(STUDENTS_DIR, exist_ok=True)
 DEPT_KEYS = ["ultrasound", "surgery", "fls", "ct", "endoscopy"]
 
 
+def make_guest_id() -> str:
+    """Per-session guest ID. Each browser session gets a fresh ID, so scores
+    don't mix between users but still save per session."""
+    return "g_" + uuid.uuid4().hex[:8]
+
+
 def _top_surgeon(s):
     """Top Surgeon = mastery (>=80) in every dept the student has actually attempted.
 
@@ -54,6 +60,8 @@ def _empty(name):
 
 
 def register_student(name: str) -> dict:
+    """Kept for backwards compatibility, but no longer called by hospital_portal.
+    Guest mode generates IDs via make_guest_id() instead."""
     sid = "s_" + str(uuid.uuid4())[:6]
     data = _empty(name)
     data["id"] = sid
@@ -164,7 +172,16 @@ def dept_header(title: str, icon: str, student_id: str):
         margin-bottom:1rem;border-left:4px solid #ffd400;">
         <span style="font-size:2rem">{icon}</span>
         <span style="font-size:1.4rem;font-weight:700;color:#fbfbff;margin-left:.6rem">{title}</span>
-        <span style="float:right;color:#909094;font-size:.85rem">Student: {student_id}</span>
+        <span style="float:right;color:#909094;font-size:.85rem">Session: {student_id}</span>
         </div>''',
         unsafe_allow_html=True
     )
+
+
+# ============================================================================
+# FREE-TRIAL STUB — kept for backwards compatibility
+# In guest mode this is never called, but old code may still reference it.
+# ============================================================================
+def is_enrolled(sid: str, dept: str) -> bool:
+    """STUB — always allow during free trial phase / guest mode."""
+    return True

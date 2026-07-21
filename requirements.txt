@@ -6,3 +6,4 @@ pillow
 plotly
 pydicom
 pandas
+matplotlib>=3.7,<4

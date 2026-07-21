@@ -1,5 +1,9 @@
 """CT Reading Room — slice view, multi-planar reconstruction, virtual knife, manual segmentation.
 
+ENHANCED Virtual Knife with proper aspect ratio, zoom, +/- step buttons, and 3D orientation inset.
+
+Drop-in replacement for ct_hospital_module.py. Requires matplotlib in requirements.txt.
+
 TotalSegmentator auto-segmentation is disabled for free-tier deployment (Streamlit Cloud
 has only 1 GB RAM, TotalSegmentator needs 4-8 GB). The manual HU-threshold painter in the
 Segmentation tab still works and is the main training tool. To re-enable AI auto-seg,
@@ -29,7 +33,6 @@ except ImportError:
 AUTOSEG_OK = False
 try:
     import nibabel as nib
-    # from totalsegmentator.python_api import totalsegmentator  # not loaded
 except ImportError:
     pass
 
@@ -274,6 +277,60 @@ def _detect_tissues_in_slice(sl_flat):
     return detected
 
 
+# ── Helper: 3-view orientation inset (axial / coronal / sagittal) with crosshairs ──
+
+def _render_3view_inset(vol, axis, depth, wl, ww, nz, ny, nx):
+    """Render three small thumbnails with crosshairs showing 3D orientation.
+    The active view (the one currently displayed in the main panel) has a red
+    border and red crosshairs at the cut position on the other two axes.
+    """
+    fig, axes = plt.subplots(1, 3, figsize=(9, 3.5))
+    fig.patch.set_facecolor("white")
+
+    # Positions on each axis
+    cur_z = depth if axis == "Axial" else nz // 2
+    cur_y = depth if axis == "Coronal" else ny // 2
+    cur_x = depth if axis == "Sagittal" else nx // 2
+
+    views = [
+        ("Axial",    vol[cur_z],        f"Axial z={cur_z}"),
+        ("Coronal",  vol[:, cur_y, :],  f"Coronal y={cur_y}"),
+        ("Sagittal", vol[:, :, cur_x],  f"Sagittal x={cur_x}"),
+    ]
+
+    for ax, view_axis, sl_data, title in zip(axes, [v[0] for v in views],
+                                              [v[1] for v in views],
+                                              [v[2] for v in views]):
+        is_active = (view_axis == axis)
+        ax.imshow(sl_data, cmap="gray",
+                  vmin=wl - ww / 2, vmax=wl + ww / 2,
+                  aspect="equal")
+        if is_active:
+            # Red crosshairs showing where the cut is on the OTHER two axes
+            if view_axis == "Axial":
+                ax.axhline(cur_y, color="red", linewidth=0.9, alpha=0.85)
+                ax.axvline(cur_x, color="red", linewidth=0.9, alpha=0.85)
+            elif view_axis == "Coronal":
+                ax.axhline(cur_z, color="red", linewidth=0.9, alpha=0.85)
+                ax.axvline(cur_x, color="red", linewidth=0.9, alpha=0.85)
+            else:  # Sagittal
+                ax.axhline(cur_z, color="red", linewidth=0.9, alpha=0.85)
+                ax.axvline(cur_y, color="red", linewidth=0.9, alpha=0.85)
+            # Red border on active view
+            for spine in ax.spines.values():
+                spine.set_edgecolor("red")
+                spine.set_linewidth(2.0)
+        ax.set_title(title, fontsize=9,
+                     fontweight="bold" if is_active else "normal",
+                     color="red" if is_active else "black")
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+    plt.tight_layout()
+    st.pyplot(fig)
+    plt.close(fig)
+
+
 def render(student_id: str):
     dept_header("CT Reading Room", "🩻", student_id)
 
@@ -366,41 +423,210 @@ def render(student_id: str):
             record_session(student_id, "ct", 75.0, f"MPR:{st.session_state.ct_label}")
             st.success("Saved!")
 
-    with tab_knife:
-        st.subheader("Virtual Knife — drag cut plane through volume")
-        axis = st.radio("Cut axis", ["Axial", "Coronal", "Sagittal"], horizontal=True)
-        win_name2 = st.selectbox("Window preset", list(WINDOWS.keys()), key="knife_win")
-        wl2, ww2 = WINDOWS[win_name2]
-        if axis == "Axial":
-            depth = st.slider("Depth (slice)", 0, nz - 1, nz // 2)
-            sl = vol[depth]
-        elif axis == "Coronal":
-            depth = st.slider("Depth (slice)", 0, ny - 1, ny // 2)
-            sl = vol[:, depth, :]
-        else:
-            depth = st.slider("Depth (slice)", 0, nx - 1, nx // 2)
-            sl = vol[:, :, depth]
-        st.image(_slice_to_img(sl, wl2, ww2),
-                 caption=f"{axis} cut at {depth}", use_column_width=True)
+    # ═══════════════════════════════════════════════════════════════════════════
+    # ENHANCED Virtual Knife — aspect ratio, zoom, +/- buttons, 3D orientation
+    # ═══════════════════════════════════════════════════════════════════════════
 
-        # ── Feature A: Annotated HU Histogram ──────────────────────────────────
+    # Lazy scipy import for z-interpolation (optional feature)
+    try:
+        from scipy.ndimage import zoom as scipy_zoom
+        SCIPY_OK = True
+    except ImportError:
+        SCIPY_OK = False
+
+    with tab_knife:
+        st.subheader("🔪 Virtual Knife — Interactive CT Slicer")
+
+        with st.expander("ℹ️ How to use the knife", expanded=False):
+            st.markdown(
+                """
+**The knife is a plane that cuts through the 3D CT volume.**
+
+1. **Pick a cut axis** — Axial (top-down), Coronal (front-back), or Sagittal (left-right).
+2. **Move the cut plane** — drag the slider, or use the ◀ ▶ buttons to step one slice at a time, or click ⟲ to jump back to the middle.
+3. **Zoom** — use + / − / Fit to inspect anatomy in detail.
+4. **Check the 3D Orientation panel below** — three small thumbnails (axial / coronal / sagittal) with red crosshairs showing where your cut is in the volume. The active view has a red border.
+5. **Read the HU histogram** — identify which tissues appear in the current slice.
+
+💡 *Think of it like slicing a loaf of bread: the axis is the direction of the cut, the depth is which slice you're looking at.*
+                """
+            )
+
+        # Axis + window
+        col_axis, col_win = st.columns([1, 2])
+        with col_axis:
+            axis = st.radio(
+                "Cut axis",
+                ["Axial", "Coronal", "Sagittal"],
+                horizontal=True,
+                key="knife_axis",
+            )
+        with col_win:
+            win_name2 = st.selectbox(
+                "Window preset", list(WINDOWS.keys()), key="knife_win"
+            )
+        wl2, ww2 = WINDOWS[win_name2]
+
+        # Determine slice range for the selected axis
+        if axis == "Axial":
+            max_depth = nz - 1
+            default_depth = nz // 2
+        elif axis == "Coronal":
+            max_depth = ny - 1
+            default_depth = ny // 2
+        else:
+            max_depth = nx - 1
+            default_depth = nx // 2
+
+        # Per-axis depth in session state (so flipping axes keeps your position)
+        depth_key = f"knife_depth_{axis.lower()}"
+        if depth_key not in st.session_state:
+            st.session_state[depth_key] = default_depth
+        # Clamp in case volume shape changed
+        st.session_state[depth_key] = max(0, min(max_depth, st.session_state[depth_key]))
+
+        # Depth control: prev / slider / next / reset
+        st.markdown("##### Cut depth")
+        col_prev, col_slider, col_next, col_reset = st.columns([1, 6, 1, 1])
+        with col_prev:
+            if st.button("◀", key="knife_prev", help="Previous slice"):
+                st.session_state[depth_key] = max(
+                    0, st.session_state[depth_key] - 1
+                )
+        with col_next:
+            if st.button("▶", key="knife_next", help="Next slice"):
+                st.session_state[depth_key] = min(
+                    max_depth, st.session_state[depth_key] + 1
+                )
+        with col_reset:
+            if st.button("⟲", key="knife_reset", help="Jump to middle"):
+                st.session_state[depth_key] = default_depth
+        with col_slider:
+            depth = st.slider(
+                "Slice",
+                0,
+                max_depth,
+                st.session_state[depth_key],
+                key=depth_key,
+                label_visibility="collapsed",
+            )
+
+        # Zoom control
+        zoom_key = "knife_zoom"
+        if zoom_key not in st.session_state:
+            st.session_state[zoom_key] = 1.0
+        zoom = st.session_state[zoom_key]
+
+        st.markdown("##### Zoom")
+        col_z1, col_z2, col_z3, col_z4 = st.columns([1, 1, 1, 3])
+        with col_z1:
+            if st.button("−", key="zoom_out", help="Zoom out"):
+                st.session_state[zoom_key] = max(
+                    0.5, st.session_state[zoom_key] - 0.25
+                )
+        with col_z2:
+            if st.button("+", key="zoom_in", help="Zoom in"):
+                st.session_state[zoom_key] = min(
+                    4.0, st.session_state[zoom_key] + 0.25
+                )
+        with col_z3:
+            if st.button("Fit", key="zoom_fit", help="Reset zoom"):
+                st.session_state[zoom_key] = 1.0
+        with col_z4:
+            st.markdown(f"**{st.session_state[zoom_key]:.2f}×**")
+
+        # Z-interpolation toggle — makes coronal/sagittal views square for
+        # thin-z DICOMs (e.g. head CTs with only 30-60 z-slices). This is what
+        # real DICOM viewers (Horos, 3D Slicer, your Chrome viewer) do by default.
+        interp_key = "knife_z_interp"
+        if interp_key not in st.session_state:
+            st.session_state[interp_key] = False
+
+        c_int1, c_int2 = st.columns([1, 3])
+        with c_int1:
+            interp_z = st.checkbox(
+                "Z-interp",
+                value=st.session_state[interp_key],
+                key=interp_key,
+                help="Interpolate slices in z so coronal/sagittal views look square. "
+                     "Recommended for thin-z DICOMs (e.g. head CT).",
+            )
+        with c_int2:
+            if interp_z and not SCIPY_OK:
+                st.caption("⚠️ scipy not installed — skipping interpolation")
+            elif interp_z and axis != "Axial":
+                st.caption(
+                    f"Original z={nz} → interpolated to ~{max(nz, ny, nx)} slices"
+                )
+
+        # Extract the slice for the selected axis/depth
+        # Apply z-interpolation for coronal/sagittal to fix the thin-band issue
+        if interp_z and SCIPY_OK and axis != "Axial":
+            target_nz = max(nz, ny, nx)
+            zoom_factor = target_nz / nz
+            vol_view = scipy_zoom(vol, (zoom_factor, 1, 1), order=1)
+        else:
+            vol_view = vol
+
+        if axis == "Axial":
+            sl = vol_view[depth]
+            slice_label = f"Axial cut at z={depth}"
+        elif axis == "Coronal":
+            sl = vol_view[:, depth, :]
+            slice_label = f"Coronal cut at y={depth}"
+        else:
+            sl = vol_view[:, :, depth]
+            slice_label = f"Sagittal cut at x={depth}"
+
+        # Render with PIL + zoom — preserves aspect ratio
+        img = _slice_to_img(sl, wl2, ww2)
+        if zoom != 1.0:
+            new_w = max(1, int(img.width * zoom))
+            new_h = max(1, int(img.height * zoom))
+            img = img.resize((new_w, new_h), Image.LANCZOS)
+
+        # Main image + side info panel
+        col_main, col_side = st.columns([3, 1])
+        with col_main:
+            st.image(img, caption=slice_label, use_column_width=True)
+        with col_side:
+            st.markdown(
+                f"""
+**Slice info**
+
+- **Axis:** {axis}
+- **Depth:** {depth} / {max_depth}
+- **Shape:** {sl.shape[0]} × {sl.shape[1]}
+- **Window:** {win_name2}
+- **W / L:** {ww2} / {wl2}
+- **Zoom:** {zoom:.2f}×
+- **Voxel:** {voxel_ml * 1000:.2f} mm³
+                """
+            )
+
+        # 3D orientation inset — three small thumbnails with crosshairs
         st.markdown("---")
-        st.markdown("#### HU Histogram — Tissue Analysis")
+        st.markdown("##### 3D Orientation — Where am I in the volume?")
+        st.caption(
+            "Red crosshairs mark the current cut position. Red border = the active view."
+        )
+        _render_3view_inset(vol, axis, depth, wl2, ww2, nz, ny, nx)
+
+        # Annotated HU histogram
+        st.markdown("---")
+        st.markdown("##### HU Histogram — Tissue Analysis")
         show_tissue_labels = st.checkbox(
             "Show tissue labels",
             value=True,
             key="knife_show_tissue_labels",
-            help="Overlay colored HU bands for known tissue types on the histogram."
+            help="Overlay colored HU bands for known tissue types on the histogram.",
         )
 
         flat = sl.flatten()
-
-        # Render annotated matplotlib histogram
         fig_hist = _render_annotated_histogram(flat, show_labels=show_tissue_labels)
         st.pyplot(fig_hist)
         plt.close(fig_hist)
 
-        # Detected tissues table
         detected = _detect_tissues_in_slice(flat)
         if detected:
             st.markdown(
@@ -409,7 +635,6 @@ def render(student_id: str):
             )
         else:
             st.markdown("*No standard tissue HU bands detected in this slice.*")
-        # ── End Feature A ───────────────────────────────────────────────────────
 
     with tab_seg:
         st.subheader("Segmentation Painter")

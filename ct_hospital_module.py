@@ -538,9 +538,12 @@ def render(student_id: str):
         # Z-interpolation toggle — makes coronal/sagittal views square for
         # thin-z DICOMs (e.g. head CTs with only 30-60 z-slices). This is what
         # real DICOM viewers (Horos, 3D Slicer, your Chrome viewer) do by default.
+        # Wrapped in try/except so a failure here doesn't crash the whole tab.
         interp_key = "knife_z_interp"
         if interp_key not in st.session_state:
             st.session_state[interp_key] = False
+        vol_view = vol
+        interp_failed = False
 
         c_int1, c_int2 = st.columns([1, 3])
         with c_int1:
@@ -552,8 +555,8 @@ def render(student_id: str):
                      "Recommended for thin-z DICOMs (e.g. head CT).",
             )
         with c_int2:
-            if interp_z and not SCIPY_OK:
-                st.caption("⚠️ scipy not installed — skipping interpolation")
+            if not SCIPY_OK:
+                st.caption("⚠️ scipy not available — Z-interp disabled")
             elif interp_z and axis != "Axial":
                 st.caption(
                     f"Original z={nz} → interpolated to ~{max(nz, ny, nx)} slices"
@@ -562,11 +565,14 @@ def render(student_id: str):
         # Extract the slice for the selected axis/depth
         # Apply z-interpolation for coronal/sagittal to fix the thin-band issue
         if interp_z and SCIPY_OK and axis != "Axial":
-            target_nz = max(nz, ny, nx)
-            zoom_factor = target_nz / nz
-            vol_view = scipy_zoom(vol, (zoom_factor, 1, 1), order=1)
-        else:
-            vol_view = vol
+            try:
+                target_nz = max(nz, ny, nx)
+                zoom_factor = target_nz / nz
+                vol_view = scipy_zoom(vol, (zoom_factor, 1, 1), order=1)
+            except Exception as e:
+                interp_failed = True
+                vol_view = vol
+                st.warning(f"Z-interp failed ({type(e).__name__}): {e}. Showing raw slice.")
 
         if axis == "Axial":
             sl = vol_view[depth]
@@ -605,12 +611,19 @@ def render(student_id: str):
             )
 
         # 3D orientation inset — three small thumbnails with crosshairs
+        # Wrapped in try/except so a failure here doesn't crash the whole tab.
         st.markdown("---")
         st.markdown("##### 3D Orientation — Where am I in the volume?")
         st.caption(
             "Red crosshairs mark the current cut position. Red border = the active view."
         )
-        _render_3view_inset(vol, axis, depth, wl2, ww2, nz, ny, nx)
+        try:
+            _render_3view_inset(vol, axis, depth, wl2, ww2, nz, ny, nx)
+        except Exception as e:
+            st.warning(
+                f"3D orientation panel failed ({type(e).__name__}): {e}. "
+                "The main slice above is still working."
+            )
 
         # Annotated HU histogram
         st.markdown("---")
@@ -622,19 +635,24 @@ def render(student_id: str):
             help="Overlay colored HU bands for known tissue types on the histogram.",
         )
 
-        flat = sl.flatten()
-        fig_hist = _render_annotated_histogram(flat, show_labels=show_tissue_labels)
-        st.pyplot(fig_hist)
-        plt.close(fig_hist)
+        try:
+            flat = sl.flatten()
+            fig_hist = _render_annotated_histogram(flat, show_labels=show_tissue_labels)
+            st.pyplot(fig_hist)
+            plt.close(fig_hist)
 
-        detected = _detect_tissues_in_slice(flat)
-        if detected:
-            st.markdown(
-                f"**Tissues detected in this slice:** "
-                + ", ".join(f"`{t}`" for t in detected)
+            detected = _detect_tissues_in_slice(flat)
+            if detected:
+                st.markdown(
+                    f"**Tissues detected in this slice:** "
+                    + ", ".join(f"`{t}`" for t in detected)
+                )
+            else:
+                st.markdown("*No standard tissue HU bands detected in this slice.*")
+        except Exception as e:
+            st.warning(
+                f"Histogram render failed ({type(e).__name__}): {e}."
             )
-        else:
-            st.markdown("*No standard tissue HU bands detected in this slice.*")
 
     with tab_seg:
         st.subheader("Segmentation Painter")

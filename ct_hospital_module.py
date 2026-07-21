@@ -16,16 +16,13 @@ from shared_session import dept_header, record_session
 # ---- DICOM support (pydicom) ----
 try:
     import pydicom
+    from pydicom.dataset import Dataset, FileDataset
+    from pydicom.uid import ExplicitVRLittleEndian, generate_uid
     DICOM_OK = True
 except ImportError:
     DICOM_OK = False
 
 # ---- TotalSegmentator support (DISABLED on free tier — see file docstring) ----
-# TotalSegmentator needs 4-8 GB RAM and downloads ~1.5 GB of model weights on first run.
-# On free-tier hosts (Streamlit Cloud = 1 GB), this would OOM-kill the app. The code below
-# still imports nibabel defensively (it's a small dependency used by some pipelines) but
-# TotalSegmentator itself is commented out and AUTOSEG_OK is forced to False so the
-# "AI auto-segmentation" UI option does not appear.
 AUTOSEG_OK = False
 try:
     import nibabel as nib
@@ -53,8 +50,8 @@ def _make_chest():
     zz, yy, xx = np.indices((nz, ny, nx), dtype=np.float32)
     r = np.sqrt((yy - 64) ** 2 + (xx - 64) ** 2)
     v = np.full((nz, ny, nx), -800.0, dtype=np.float32)
-    v[r < 45] = -500.0          # lung fields
-    v[r < 15] = 50.0            # mediastinum overrides lung
+    v[r < 45] = -500.0
+    v[r < 15] = 50.0
     rib_mask = (r > 45) & (r < 55) & (zz < 80)
     v[rib_mask] = 600.0
     return v
@@ -132,6 +129,25 @@ def _slice_to_img(arr2d, wl, ww):
     return Image.fromarray(scaled)
 
 
+def _ensure_3d(arr: np.ndarray) -> np.ndarray:
+    """Defensive: pydicom pixel_array can be 2D, 3D, or 4D depending on modality
+    and frame count. Downstream code assumes 3D (slices, rows, cols).
+    - 2D  -> add a leading axis
+    - 3D  -> assume (slices, rows, cols) and return as-is
+    - 4D  -> squeeze leading singleton (e.g. single-frame 4D cine)
+    - 5+D -> keep squeezing leading axes until 3D
+    """
+    while arr.ndim > 3:
+        if arr.shape[0] == 1:
+            arr = arr[0]
+        else:
+            # Multi-frame 4D: take the first volume
+            arr = arr[0]
+    if arr.ndim == 2:
+        arr = arr[np.newaxis, :, :]
+    return arr
+
+
 def _extract_spacing(ds):
     """Read (row_mm, col_mm, slice_mm) from a pydicom dataset."""
     try:
@@ -164,6 +180,7 @@ def _load_dicom_zip(raw_bytes):
                 slope = float(getattr(ds, "RescaleSlope", 1))
                 inter = float(getattr(ds, "RescaleIntercept", 0))
                 arr = arr * slope + inter
+                arr = _ensure_3d(arr)
                 sort_key = (
                     getattr(ds, "InstanceNumber", None)
                     or getattr(ds, "SliceLocation", None)
@@ -184,7 +201,8 @@ def _load_dicom_zip(raw_bytes):
             return (1, str(k))
 
     loaded.sort(key=sortfunc)
-    vol = np.stack([item[1] for item in loaded], axis=0).astype(np.float32)
+    vol = np.concatenate([item[1] for item in loaded], axis=0).astype(np.float32)
+    vol = _ensure_3d(vol)
     spacing = _extract_spacing(loaded[0][2])
     return vol, spacing
 
@@ -230,9 +248,10 @@ def render(student_id: str):
                         arr = arr * float(getattr(ds, "RescaleSlope", 1)) + float(
                             getattr(ds, "RescaleIntercept", 0)
                         )
-                        vol = arr[np.newaxis]
+                        vol = _ensure_3d(arr)
                         spacing = _extract_spacing(ds)
                 if vol is not None:
+                    vol = _ensure_3d(vol)
                     st.session_state.ct_vol = vol
                     st.session_state.ct_label = up.name
                     st.session_state.ct_spacing = spacing
@@ -248,6 +267,8 @@ def render(student_id: str):
             return
 
     vol = st.session_state.ct_vol
+    vol = _ensure_3d(vol)
+    st.session_state.ct_vol = vol
     spacing = st.session_state.get("ct_spacing", (0.5, 0.5, 0.5))
     nz, ny, nx = vol.shape
     voxel_ml = (spacing[0] * spacing[1] * spacing[2]) / 1000.0

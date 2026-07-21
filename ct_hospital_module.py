@@ -1,17 +1,41 @@
+"""CT Reading Room — slice view, multi-planar reconstruction, virtual knife, manual segmentation.
+
+TotalSegmentator auto-segmentation is disabled for free-tier deployment (Streamlit Cloud
+has only 1 GB RAM, TotalSegmentator needs 4-8 GB). The manual HU-threshold painter in the
+Segmentation tab still works and is the main training tool. To re-enable AI auto-seg,
+host the app somewhere with 4+ GB RAM (Render $7/mo, Oracle Cloud Free 24 GB, etc.)
+and set AUTOSEG_OK = True in the import block below.
+"""
+
 import streamlit as st
 import numpy as np
 import math, io, zipfile, datetime
 from PIL import Image
 from shared_session import dept_header, record_session
 
+# ---- DICOM support (pydicom) ----
 try:
     import pydicom
     DICOM_OK = True
 except ImportError:
     DICOM_OK = False
 
+# ---- TotalSegmentator support (DISABLED on free tier — see file docstring) ----
+# TotalSegmentator needs 4-8 GB RAM and downloads ~1.5 GB of model weights on first run.
+# On free-tier hosts (Streamlit Cloud = 1 GB), this would OOM-kill the app. The code below
+# still imports nibabel defensively (it's a small dependency used by some pipelines) but
+# TotalSegmentator itself is commented out and AUTOSEG_OK is forced to False so the
+# "AI auto-segmentation" UI option does not appear.
+AUTOSEG_OK = False
+try:
+    import nibabel as nib
+    # from totalsegmentator.python_api import totalsegmentator  # not loaded
+except ImportError:
+    pass
+
 
 # ── Vectorized synthetic volume generators (~100x faster than nested loops) ──
+
 def _make_brain():
     nz, ny, nx = 80, 128, 128
     cz, cy, cx = 40, 64, 64
@@ -65,10 +89,9 @@ def _make_kidney():
     v = np.full((nz, ny, nx), -100.0, dtype=np.float32)
     for ox in (40, 88):
         r = np.sqrt((xx - ox) ** 2 / 400 + (yy - 64) ** 2 / 900 + (zz - 40) ** 2 / 900)
-        # Assign innermost first, then overwrite outward — order matters.
-        v[r < 1] = -50.0                          # inner pelvis
-        v[(r > 0.3) & (r < 1)] = 0.0              # medulla
-        v[(r > 0.6) & (r < 1)] = 30.0             # cortex
+        v[r < 1] = -50.0
+        v[(r > 0.3) & (r < 1)] = 0.0
+        v[(r > 0.6) & (r < 1)] = 30.0
     return v
 
 
@@ -92,6 +115,7 @@ CASES = {
     "🫀 Liver":   (_make_liver,   "Liver & vessels"),
 }
 
+
 WINDOWS = {
     "Brain":        (40,  80),
     "Lung":         (-600, 1500),
@@ -109,10 +133,7 @@ def _slice_to_img(arr2d, wl, ww):
 
 
 def _extract_spacing(ds):
-    """Read (row_mm, col_mm, slice_mm) from a pydicom dataset.
-
-    Falls back to 0.5 mm isotropic if tags missing — appropriate for synthetic.
-    """
+    """Read (row_mm, col_mm, slice_mm) from a pydicom dataset."""
     try:
         ps = getattr(ds, "PixelSpacing", [0.5, 0.5])
         row_mm = float(ps[0])
@@ -127,15 +148,7 @@ def _extract_spacing(ds):
 
 
 def _load_dicom_zip(raw_bytes):
-    """Load DICOM slices, sort by InstanceNumber/SliceLocation — not filename.
-
-    Fix: original `sorted(zf.namelist())` broke for unpadded filenames like
-    slice1.dcm, slice10.dcm, slice2.dcm (alphabetical puts slice10 between
-    slice1 and slice2). Now we use DICOM tags when available and fall back
-    to filename only as a last resort.
-
-    Returns (volume, spacing) or (None, None) on failure.
-    """
+    """Load DICOM slices, sort by InstanceNumber/SliceLocation — not filename."""
     if not DICOM_OK:
         st.error("pydicom not installed. Run: pip install pydicom")
         return None, None
@@ -151,7 +164,6 @@ def _load_dicom_zip(raw_bytes):
                 slope = float(getattr(ds, "RescaleSlope", 1))
                 inter = float(getattr(ds, "RescaleIntercept", 0))
                 arr = arr * slope + inter
-                # Prefer InstanceNumber, then SliceLocation, then filename
                 sort_key = (
                     getattr(ds, "InstanceNumber", None)
                     or getattr(ds, "SliceLocation", None)
@@ -179,8 +191,10 @@ def _load_dicom_zip(raw_bytes):
 
 def render(student_id: str):
     dept_header("CT Reading Room", "🩻", student_id)
+
     tab_load, tab_mpr, tab_knife, tab_seg = st.tabs(
-        ["📂 Load Case", "🖼️ Multi-Planar", "🔪 Virtual Knife", "🎨 Segmentation"])
+        ["📂 Load Case", "🖼️ Multi-Planar", "🔪 Virtual Knife", "🎨 Segmentation"]
+    )
 
     with tab_load:
         st.subheader("Load a CT Case")
@@ -236,7 +250,7 @@ def render(student_id: str):
     vol = st.session_state.ct_vol
     spacing = st.session_state.get("ct_spacing", (0.5, 0.5, 0.5))
     nz, ny, nx = vol.shape
-    voxel_ml = (spacing[0] * spacing[1] * spacing[2]) / 1000.0  # mm³ → mL
+    voxel_ml = (spacing[0] * spacing[1] * spacing[2]) / 1000.0
 
     with tab_mpr:
         st.subheader("Multi-Planar Reconstruction")
@@ -247,22 +261,18 @@ def render(student_id: str):
         win_name = st.selectbox("Window preset", list(WINDOWS.keys()), key="mpr_win")
         wl, ww = WINDOWS[win_name]
         c1, c2, c3 = st.columns(3)
-
         with c1:
             z = st.slider("Axial slice", 0, nz - 1, nz // 2, key="ax")
             img = _slice_to_img(vol[z], wl, ww)
             st.image(img, caption=f"Axial z={z}", use_column_width=True)
-
         with c2:
             y = st.slider("Coronal slice", 0, ny - 1, ny // 2, key="cor")
             img = _slice_to_img(vol[:, y, :], wl, ww)
             st.image(img, caption=f"Coronal y={y}", use_column_width=True)
-
         with c3:
             x = st.slider("Sagittal slice", 0, nx - 1, nx // 2, key="sag")
             img = _slice_to_img(vol[:, :, x], wl, ww)
             st.image(img, caption=f"Sagittal x={x}", use_column_width=True)
-
         if st.button("💾 Save CT session", key="ct_save_mpr"):
             record_session(student_id, "ct", 75.0, f"MPR:{st.session_state.ct_label}")
             st.success("Saved!")
@@ -272,7 +282,6 @@ def render(student_id: str):
         axis = st.radio("Cut axis", ["Axial", "Coronal", "Sagittal"], horizontal=True)
         win_name2 = st.selectbox("Window preset", list(WINDOWS.keys()), key="knife_win")
         wl2, ww2 = WINDOWS[win_name2]
-
         if axis == "Axial":
             depth = st.slider("Depth (slice)", 0, nz - 1, nz // 2)
             sl = vol[depth]
@@ -282,10 +291,8 @@ def render(student_id: str):
         else:
             depth = st.slider("Depth (slice)", 0, nx - 1, nx // 2)
             sl = vol[:, :, depth]
-
         st.image(_slice_to_img(sl, wl2, ww2),
                  caption=f"{axis} cut at {depth}", use_column_width=True)
-
         flat = sl.flatten()
         counts, _ = np.histogram(flat, bins=50)
         st.bar_chart({"HU distribution": counts})
@@ -297,33 +304,30 @@ def render(student_id: str):
             "Liver":           (40,  80),
             "Kidney Cortex":   (20,  50),
             "Spleen":          (40,  60),
-            "Fat":             (-120,-60),
+            "Fat":             (-120, -60),
             "Blood/Vessel":    (45,  80),
             "Soft Tissue":     (20,  80),
             "Cortical Bone":   (400, 2000),
             "Cancellous Bone": (100, 400),
-            "Lung":            (-700,-500),
-            "Air":             (-1100,-900),
+            "Lung":            (-700, -500),
+            "Air":             (-1100, -900),
         }
         preset = st.selectbox("Tissue preset", list(HU_PRESETS.keys()))
         lo, hi = HU_PRESETS[preset]
         z_seg = st.slider("Axial slice", 0, nz - 1, nz // 2, key="seg_z")
         win_s = st.selectbox("Window", list(WINDOWS.keys()), key="seg_win")
         wls, wws = WINDOWS[win_s]
-
         sl = vol[z_seg]
         base = _slice_to_img(sl, wls, wws).convert("RGB")
         mask = (sl >= lo) & (sl <= hi)
         overlay = np.array(base)
         overlay[mask] = [255, 140, 0]
         vol_ml_seg = float(mask.sum()) * voxel_ml
-
         st.image(Image.fromarray(overlay),
                  caption=f"{preset} overlay — {vol_ml_seg:.2f} mL",
                  use_column_width=True)
         st.metric("Segmented volume", f"{vol_ml_seg:.2f} mL")
         st.metric("HU range", f"{lo} to {hi}")
-
         if st.button("💾 Save segmentation session", key="seg_save"):
             record_session(
                 student_id, "ct", 80.0,

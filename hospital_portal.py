@@ -126,19 +126,61 @@ def _route(dept, sid):
     # backwards compatibility with any code that still imports it.
 
     if dept == "ultrasound":
-        from mls_hospital_module import render as r; r("ultrasound", sid)
+        try:
+            from mls_hospital_module import render as r
+            r("ultrasound", sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"Ultrasound module error: {_e}")
+            st.code(traceback.format_exc())
     elif dept == "surgery":
-        from surgery_module import run as r; r(sid)
+        try:
+            from surgery_module import run as r
+            r(sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"Surgery module error: {_e}")
+            st.code(traceback.format_exc())
     elif dept == "fls":
-        from mls_hospital_module import render as r; r("fls", sid)
+        try:
+            from mls_hospital_module import render as r
+            r("fls", sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"FLS module error: {_e}")
+            st.code(traceback.format_exc())
     elif dept == "ct":
-        from ct_hospital_module import render as r; r(sid)
+        try:
+            from ct_hospital_module import render as r
+            r(sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"CT module error: {_e}")
+            st.code(traceback.format_exc())
     elif dept == "endoscopy":
-        from endoscopy_module import render as r; r(sid)
+        try:
+            from endoscopy_module import render as r
+            r(sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"Endoscopy module error: {_e}")
+            st.code(traceback.format_exc())
     elif dept == "analytics":
-        from analytics_dashboard import render as r; r(sid)
+        try:
+            from analytics_dashboard import render as r
+            r(sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"Analytics module error: {_e}")
+            st.code(traceback.format_exc())
     elif dept == "instructions":
-        from instructions_module import render as r; r(sid)
+        try:
+            from instructions_module import render as r
+            r(sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"Instructions module error: {_e}")
+            st.code(traceback.format_exc())
 
 
 def main():

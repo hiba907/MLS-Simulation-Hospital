@@ -1,0 +1,9 @@
+streamlit>=1.30
+opencv-contrib-python>=4.7
+numpy
+scipy
+pillow
+plotly
+pydicom
+pandas
+matplotlib

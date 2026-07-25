@@ -641,8 +641,7 @@ def _draw_marker_explanation():
 # ─────────────────────────────────────────────────────────────────────────────
 
 def run(student_id=None):
-    dept_header("Surgery Simulation", "🔪",
-                "Wound tracking with optical markers & suture technique practice")
+    dept_header("Surgery Simulation", "🔪", student_id)
 
     if not MPL_OK:
         st.error("matplotlib is required for this module. Run: pip install matplotlib")
@@ -867,14 +866,9 @@ The system measures the **gap** between corresponding L/R pairs to track:
             # Record session
             if st.button("Save to My Progress", key="save_surgery"):
                 record_session(
-                    dept="Surgery",
-                    score=score,
-                    details={
-                        "suture_type": selected_suture,
-                        "wound_length_mm": w_len,
-                        "sutures_placed": n_placed,
-                        "gap_remaining_mm": round(gap_remaining, 1),
-                    }
+                    student_id, "Surgery", float(score),
+                    f"Suture:{selected_suture} wound:{w_len}mm "
+                    f"sutures:{n_placed} gap:{gap_remaining:.1f}mm"
                 )
                 st.success("Progress saved!")
 

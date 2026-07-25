@@ -542,13 +542,23 @@ def render(student_id: str):
                         st.error("pydicom not installed")
                         vol, spacing = None, None
                     else:
-                        ds = pydicom.dcmread(io.BytesIO(raw))
-                        arr = ds.pixel_array.astype(np.float32)
-                        arr = arr * float(getattr(ds, "RescaleSlope", 1)) + float(
-                            getattr(ds, "RescaleIntercept", 0)
-                        )
-                        vol = _ensure_3d(arr)
-                        spacing = _extract_spacing(ds)
+                        ds = None
+                        try:
+                            ds = pydicom.dcmread(io.BytesIO(raw))
+                        except Exception as _e:
+                            st.error(f"⚠️ Could not read DICOM file: {_e}. Make sure pydicom is installed and the file is a valid DICOM.")
+                            vol, spacing = None, None
+                        if ds is not None:
+                            try:
+                                arr = ds.pixel_array.astype(np.float32)
+                                arr = arr * float(getattr(ds, "RescaleSlope", 1)) + float(
+                                    getattr(ds, "RescaleIntercept", 0)
+                                )
+                                vol = _ensure_3d(arr)
+                                spacing = _extract_spacing(ds)
+                            except Exception as _e:
+                                st.error(f"⚠️ Could not read pixel data from DICOM: {_e}")
+                                vol, spacing = None, None
                 if vol is not None:
                     vol = _ensure_3d(vol)
                     st.session_state.ct_vol = vol

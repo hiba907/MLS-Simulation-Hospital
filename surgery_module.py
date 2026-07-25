@@ -640,7 +640,7 @@ def _draw_marker_explanation():
 # MAIN MODULE ENTRY POINT
 # ─────────────────────────────────────────────────────────────────────────────
 
-def run():
+def run(student_id=None):
     dept_header("Surgery Simulation", "🔪",
                 "Wound tracking with optical markers & suture technique practice")
 

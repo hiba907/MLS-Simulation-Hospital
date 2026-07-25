@@ -1,9 +1,0 @@
-streamlit>=1.30
-opencv-contrib-python>=4.7
-numpy
-scipy
-pillow
-plotly
-pydicom
-pandas
-matplotlib>=3.7,<4

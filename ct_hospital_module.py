@@ -13,6 +13,7 @@ and set AUTOSEG_OK = True in the import block below.
 
 import streamlit as st
 import numpy as np
+import pandas as pd
 import math, io, zipfile, datetime
 import matplotlib
 matplotlib.use("Agg")
@@ -916,7 +917,6 @@ def render(student_id: str):
 
             if st.button("🚀 Render 3-D", key="ct3d_render", type="primary"):
                 import plotly.graph_objects as go
-                import numpy as np
 
                 # Downsample
                 _v = _vol3d[::_ds, ::_ds, ::_ds].astype(np.float32)
@@ -982,7 +982,6 @@ def render(student_id: str):
 
             # ── HU reference table ────────────────────────────────────────────
             with st.expander("📖 HU Tissue Reference"):
-                import pandas as pd
                 st.dataframe(pd.DataFrame({
                     "Tissue": ["Air","Lung","Fat","Water/CSF","Soft Tissue","Blood","Contrast","Bone Trabecular","Bone Cortical"],
                     "HU Min": [-1000,-900,-120,-10,20,30,100,200,700],

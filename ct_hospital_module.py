@@ -45,7 +45,6 @@ from scipy.ndimage import gaussian_filter as _gf
 
 def _perlin_like_noise(shape, scales=(4, 8, 16, 32), weights=(0.45, 0.30, 0.18, 0.07), seed=42):
     """Multi-scale Gaussian-smoothed noise — fast Perlin approximation."""
-    import numpy as np
     rng = np.random.default_rng(seed)
     out = np.zeros(shape, dtype=np.float32)
     for sc, w in zip(scales, weights):
@@ -63,7 +62,6 @@ def _make_brain():
     """Brain CT with Perlin-like noise: skull diploe, sulci, lateral/third
     ventricles, gray/white matter, falx cerebri, cerebellum, brainstem.
     HU: skull 820-1180, CSF 6-10, GM 35-45, WM 26-34, ventricles ~6."""
-    import numpy as np
     nz, ny, nx = 100, 144, 144
     cz, cy, cx = 50, 72, 72
     zz, yy, xx = np.indices((nz, ny, nx), dtype=np.float32)
@@ -109,7 +107,6 @@ def _make_chest():
     """Chest CT: body wall (fat + muscle), 2 lungs with vascular texture,
     heart, aorta, trachea, spine with canal, sternum, 10 ribs.
     All boundaries perturbed by Perlin-like noise."""
-    import numpy as np
     nz, ny, nx = 110, 144, 144
     cz, cy, cx = 55, 72, 72
     zz, yy, xx = np.indices((nz, ny, nx), dtype=np.float32)
@@ -154,7 +151,6 @@ def _make_chest():
 def _make_abdomen():
     """Abdomen CT: body wall, liver + portal vein, spleen, 2 kidneys,
     aorta, IVC, spine, visceral fat — all with Perlin noise boundaries."""
-    import numpy as np
     nz, ny, nx = 110, 144, 144
     cz, cy, cx = 55, 72, 72
     zz, yy, xx = np.indices((nz, ny, nx), dtype=np.float32)
@@ -198,7 +194,6 @@ def _make_abdomen():
 def _make_bone():
     """Long bone CT cross-section: cortical ring (900+ HU), trabecular
     lattice (300-500 HU), medullary canal (-80 HU fat marrow) — Perlin noise."""
-    import numpy as np
     nz, ny, nx = 80, 128, 128
     cz, cy, cx = 40, 64, 64
     zz, yy, xx = np.indices((nz, ny, nx), dtype=np.float32)
@@ -225,7 +220,6 @@ def _make_bone():
 def _make_kidney():
     """Detailed kidney CT: perinephric fat, cortex, medullary pyramids,
     renal pelvis/sinus — bilateral — with Perlin noise organ surfaces."""
-    import numpy as np
     nz, ny, nx = 80, 128, 128
     cz, cy, cx = 40, 64, 64
     zz, yy, xx = np.indices((nz, ny, nx), dtype=np.float32)
@@ -248,7 +242,6 @@ def _make_kidney():
 def _make_liver():
     """Detailed liver CT: parenchyma, portal vein + branches, 3 hepatic
     veins, gallbladder, IVC — all with Perlin noise organ surfaces."""
-    import numpy as np
     nz, ny, nx = 90, 144, 144
     cz, cy, cx = 45, 72, 72
     zz, yy, xx = np.indices((nz, ny, nx), dtype=np.float32)
@@ -321,6 +314,17 @@ def _slice_to_img(arr2d, wl, ww):
     return Image.fromarray(scaled)
 
 
+def _scale_up_img(img):
+    """Scale up small images to prevent blocky/pixelated look in Streamlit."""
+    min_dim = min(img.width, img.height)
+    if min_dim < 512:
+        scale = 512.0 / min_dim
+        new_w = max(1, int(img.width * scale))
+        new_h = max(1, int(img.height * scale))
+        return img.resize((new_w, new_h), Image.LANCZOS)
+    return img
+
+
 def _ensure_3d(arr: np.ndarray) -> np.ndarray:
     """Defensive: pydicom pixel_array can be 2D, 3D, or 4D depending on modality
     and frame count. Downstream code assumes 3D (slices, rows, cols).
@@ -337,6 +341,16 @@ def _ensure_3d(arr: np.ndarray) -> np.ndarray:
             arr = arr[0]
     if arr.ndim == 2:
         arr = arr[np.newaxis, :, :]
+        
+    # Ensure each dimension is at least 2 so Streamlit sliders don't crash
+    # (Slider min_value must be less than max_value)
+    if arr.shape[0] < 2:
+        arr = np.concatenate([arr, arr], axis=0)
+    if arr.shape[1] < 2:
+        arr = np.concatenate([arr, arr], axis=1)
+    if arr.shape[2] < 2:
+        arr = np.concatenate([arr, arr], axis=2)
+        
     return arr
 
 
@@ -595,16 +609,16 @@ def render(student_id: str):
         wl, ww = WINDOWS[win_name]
         c1, c2, c3 = st.columns(3)
         with c1:
-            z = st.slider("Axial slice", 0, nz - 1, nz // 2, key="ax")
-            img = _slice_to_img(vol[z], wl, ww)
+            z = st.slider("Axial slice", 0, max(1, nz - 1), min(nz - 1, nz // 2), key="ax")
+            img = _scale_up_img(_slice_to_img(vol[z], wl, ww))
             st.image(img, caption=f"Axial z={z}", use_column_width=True)
         with c2:
-            y = st.slider("Coronal slice", 0, ny - 1, ny // 2, key="cor")
-            img = _slice_to_img(vol[:, y, :], wl, ww)
+            y = st.slider("Coronal slice", 0, max(1, ny - 1), min(ny - 1, ny // 2), key="cor")
+            img = _scale_up_img(_slice_to_img(vol[:, y, :], wl, ww))
             st.image(img, caption=f"Coronal y={y}", use_column_width=True)
         with c3:
-            x = st.slider("Sagittal slice", 0, nx - 1, nx // 2, key="sag")
-            img = _slice_to_img(vol[:, :, x], wl, ww)
+            x = st.slider("Sagittal slice", 0, max(1, nx - 1), min(nx - 1, nx // 2), key="sag")
+            img = _scale_up_img(_slice_to_img(vol[:, :, x], wl, ww))
             st.image(img, caption=f"Sagittal x={x}", use_column_width=True)
         if st.button("💾 Save CT session", key="ct_save_mpr"):
             record_session(student_id, "ct", 75.0, f"MPR:{st.session_state.ct_label}")
@@ -767,6 +781,7 @@ def render(student_id: str):
 
         # Render with PIL + zoom — preserves aspect ratio
         img = _slice_to_img(sl, wl2, ww2)
+        img = _scale_up_img(img)  # smooth small DICOMs
         if zoom != 1.0:
             new_w = max(1, int(img.width * zoom))
             new_h = max(1, int(img.height * zoom))
@@ -840,7 +855,7 @@ def render(student_id: str):
         }
         preset = st.selectbox("Tissue preset", list(HU_PRESETS.keys()))
         lo, hi = HU_PRESETS[preset]
-        z_seg = st.slider("Axial slice", 0, nz - 1, nz // 2, key="seg_z")
+        z_seg = st.slider("Axial slice", 0, max(1, nz - 1), min(nz - 1, nz // 2), key="seg_z")
         win_s = st.selectbox("Window", list(WINDOWS.keys()), key="seg_win")
         wls, wws = WINDOWS[win_s]
         sl = vol[z_seg]
@@ -849,7 +864,7 @@ def render(student_id: str):
         overlay = np.array(base)
         overlay[mask] = [255, 140, 0]
         vol_ml_seg = float(mask.sum()) * voxel_ml
-        st.image(Image.fromarray(overlay),
+        st.image(_scale_up_img(Image.fromarray(overlay)),
                  caption=f"{preset} overlay — {vol_ml_seg:.2f} mL",
                  use_column_width=True)
         st.metric("Segmented volume", f"{vol_ml_seg:.2f} mL")
@@ -1036,7 +1051,7 @@ def _render_code_lab(vol, nz, ny, nx, student_id):
 
     # Helper: show image inline
     def _show_slice(arr2d, caption):
-        img = _slice_to_img(arr2d, WL_DEFAULT, WW_DEFAULT)
+        img = _scale_up_img(_slice_to_img(arr2d, WL_DEFAULT, WW_DEFAULT))
         st.image(img, caption=caption, width=300)
 
     # ── Exercise 1 ──────────────────────────────────────────────────────────
@@ -1205,7 +1220,7 @@ def _render_code_lab(vol, nz, ny, nx, student_id):
                 base_img = _slice_to_img(sl_liver, WL_DEFAULT, WW_DEFAULT).convert("RGB")
                 overlay = np.array(base_img)
                 overlay[liver_mask] = [255, 140, 0]
-                st.image(Image.fromarray(overlay), caption="Liver mask (HU 40–80) shown in orange", width=300)
+                st.image(_scale_up_img(Image.fromarray(overlay)), caption="Liver mask (HU 40–80) shown in orange", width=300)
             else:
                 st.error(
                     "❌ Try again. Hint: Use comparison operators (`>=`, `<=`) with "
@@ -1375,7 +1390,7 @@ def _render_challenges(vol, nz, ny, nx, spacing, voxel_ml, student_id):
             base_c1 = _slice_to_img(sl_c1, 60, 400).convert("RGB")
             ov_c1 = np.array(base_c1)
             ov_c1[liver_mask_c1] = [255, 140, 0]
-            st.image(Image.fromarray(ov_c1), caption=f"Axial z={c1_z}", width=300)
+            st.image(_scale_up_img(Image.fromarray(ov_c1)), caption=f"Axial z={c1_z}", width=300)
 
             live_count = int(liver_counts[c1_z])
             st.metric("Liver pixels in this slice", live_count)
@@ -1406,7 +1421,7 @@ def _render_challenges(vol, nz, ny, nx, spacing, voxel_ml, student_id):
                     base_ref = _slice_to_img(sl_ref, 60, 400).convert("RGB")
                     ov_ref = np.array(base_ref)
                     ov_ref[lm_ref] = [255, 140, 0]
-                    st.image(Image.fromarray(ov_ref),
+                    st.image(_scale_up_img(Image.fromarray(ov_ref)),
                              caption=f"True max-liver slice z={true_max_slice}", width=300)
                     st.info("👉 Challenge 2 is now unlocked!")
             else:
@@ -1443,7 +1458,7 @@ def _render_challenges(vol, nz, ny, nx, spacing, voxel_ml, student_id):
                 "Soft Tissue (W:400, L:40)":(40, 400),
             }
             wl_c2, ww_c2 = preset_map[c2_preset]
-            img_c2 = _slice_to_img(brain_vol[b_mid], wl_c2, ww_c2)
+            img_c2 = _scale_up_img(_slice_to_img(brain_vol[b_mid], wl_c2, ww_c2))
             st.image(img_c2, caption=f"Brain CT with {c2_preset}", width=300)
 
             if not c2_passed:
@@ -1506,7 +1521,7 @@ def _render_challenges(vol, nz, ny, nx, spacing, voxel_ml, student_id):
             base_c3 = _slice_to_img(sl_c3, -600, 1500).convert("RGB")
             ov_c3 = np.array(base_c3)
             ov_c3[seg_mask_c3] = [0, 180, 255]
-            st.image(Image.fromarray(ov_c3),
+            st.image(_scale_up_img(Image.fromarray(ov_c3)),
                      caption=f"Lung segmentation overlay (HU {lo_c3} to {hi_c3})", width=300)
 
             # Compute full-volume segmentation
@@ -1576,7 +1591,7 @@ def _render_challenges(vol, nz, ny, nx, spacing, voxel_ml, student_id):
             st.pyplot(fig_c4)
             plt.close(fig_c4)
             st.image(
-                _slice_to_img(sl_c4, 60, 400),
+                _scale_up_img(_slice_to_img(sl_c4, 60, 400)),
                 caption=f"Axial slice z={c4_z}", width=300
             )
 

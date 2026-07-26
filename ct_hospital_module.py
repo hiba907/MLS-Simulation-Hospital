@@ -1,9 +1,4 @@
-"""CT Reading Room — slice view, multi-planar reconstruction, virtual knife, manual segmentation.
-
-ENHANCED Virtual Knife with proper aspect ratio, zoom, +/- step buttons, and 3D orientation inset.
-
-Drop-in replacement for ct_hospital_module.py. Requires matplotlib in requirements.txt.
-"""
+"""CT Reading Room — slice view, multi-planar reconstruction, virtual knife, manual segmentation."""
 
 import streamlit as st
 import numpy as np
@@ -15,7 +10,6 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from shared_session import dept_header, record_session
 
-# ---- DICOM support (pydicom) ----
 try:
     import pydicom
     from pydicom.dataset import Dataset, FileDataset
@@ -24,7 +18,6 @@ try:
 except ImportError:
     DICOM_OK = False
 
-# ---- TotalSegmentator support (DISABLED on free tier — see file docstring) ----
 AUTOSEG_OK = False
 try:
     import nibabel as nib
@@ -41,8 +34,7 @@ def _perlin_like_noise(shape, scales=(4, 8, 16, 32), weights=(0.45, 0.30, 0.18, 
         sigma = max(shape[0] // sc, 1)
         n = _gf(n, sigma=sigma)
         std = n.std()
-        if std > 0:
-            n /= std
+        if std > 0: n /= std
         out += w * n
     return out
 

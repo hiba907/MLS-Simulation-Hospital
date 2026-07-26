@@ -1,4 +1,5 @@
 streamlit>=1.30
+streamlit-webrtc
 opencv-contrib-python>=4.7
 numpy
 scipy

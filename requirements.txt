@@ -8,3 +8,7 @@ plotly
 pydicom
 pandas
 matplotlib
+lungmask
+SimpleITK
+totalsegmentator
+nibabel

@@ -274,6 +274,18 @@ def _scale_up_img(img):
         return img.resize((new_w, new_h), Image.LANCZOS)
     return img
 
+def _apply_z_stretch(img, factor):
+    """Stretch a coronal/sagittal image vertically so it reflects real-world
+    proportions instead of raw voxel counts. Without this, a scan with few
+    axial slices but a large in-plane resolution renders as a flat, squished
+    strip even though it's not a bug -- it's just missing the physical
+    slice-spacing correction."""
+    factor = max(0.05, min(factor, 50.0))  # sane bounds against bad spacing metadata
+    if abs(factor - 1.0) < 1e-3:
+        return img
+    new_h = max(1, int(round(img.height * factor)))
+    return img.resize((img.width, new_h), Image.LANCZOS)
+
 def _ensure_3d(arr: np.ndarray) -> np.ndarray:
     while arr.ndim > 3:
         if arr.shape[0] == 1:
@@ -499,12 +511,16 @@ def render(student_id: str):
         with c2:
             max_y = max(1, ny - 1)
             y = st.slider("Coronal slice", 0, max_y, min(max_y, ny // 2), key="cor")
-            img = _scale_up_img(_slice_to_img(vol[:, y, :], wl, ww))
+            img = _slice_to_img(vol[:, y, :], wl, ww)
+            img = _apply_z_stretch(img, spacing[2] / spacing[0]) if spacing[0] else img
+            img = _scale_up_img(img)
             st.image(img, caption=f"Coronal y={y}", use_column_width=True)
         with c3:
             max_x = max(1, nx - 1)
             x = st.slider("Sagittal slice", 0, max_x, min(max_x, nx // 2), key="sag")
-            img = _scale_up_img(_slice_to_img(vol[:, :, x], wl, ww))
+            img = _slice_to_img(vol[:, :, x], wl, ww)
+            img = _apply_z_stretch(img, spacing[2] / spacing[1]) if spacing[1] else img
+            img = _scale_up_img(img)
             st.image(img, caption=f"Sagittal x={x}", use_column_width=True)
             
         if st.button("💾 Save CT session", key="ct_save_mpr"):
@@ -682,6 +698,8 @@ def render(student_id: str):
         if _vol3d is None:
             st.warning("⬅️ Load a phantom or upload a DICOM in the **📂 Load Case** tab first.")
         else:
+            if _vol3d.shape[0] <= 2:
+                st.info("ℹ️ You've loaded a single 2D image rather than a full CT series, so there's almost no depth to build a 3D shape from. The render below will look like a thin, mostly flat wafer rather than a full anatomical structure -- upload a multi-slice DICOM series (a .zip of many .dcm files) for a realistic 3D model.")
             _c1, _c2, _c3 = st.columns(3)
             with _c1:
                 _lo = st.slider("Lower HU threshold", -1000, 500, st.session_state.get("ct3d_lower", -200), 10, key="ct3d_lower_sl")
@@ -692,7 +710,14 @@ def render(student_id: str):
             _render_mode = st.radio("Render mode", ["🌫️ Volume Cloud", "🗿 Isosurface (solid)"], horizontal=True, key="ct3d_mode")
             if st.button("🚀 Render 3-D", key="ct3d_render", type="primary"):
                 import plotly.graph_objects as go
-                _v = _vol3d[::_ds, ::_ds, ::_ds].astype(np.float32)
+                # Don't let the downsample stride collapse a thin axis (e.g. z=2
+                # from a single duplicated slice) down to a single layer -- an
+                # isosurface/volume render needs at least 2 layers per axis to
+                # produce any visible geometry at all.
+                _ds_z = min(_ds, max(1, _vol3d.shape[0] // 2))
+                _ds_y = min(_ds, max(1, _vol3d.shape[1] // 2))
+                _ds_x = min(_ds, max(1, _vol3d.shape[2] // 2))
+                _v = _vol3d[::_ds_z, ::_ds_y, ::_ds_x].astype(np.float32)
                 _v = np.clip(_v, _lo, _hi)
                 _nz, _ny, _nx = _v.shape
                 _zz, _yy, _xx = np.mgrid[0:_nz, 0:_ny, 0:_nx]

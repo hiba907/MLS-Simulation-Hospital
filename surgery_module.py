@@ -11,10 +11,17 @@ try:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     import matplotlib.patches as patches
-    from matplotlib.patches import FancyArrowPatch, Arc
     MPL_OK = True
 except ImportError:
     MPL_OK = False
+
+try:
+    import cv2
+    import av
+    from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
+    WEBRTC_OK = True
+except ImportError:
+    WEBRTC_OK = False
 
 from shared_session import dept_header, record_session
 
@@ -332,6 +339,29 @@ def _draw_marker_explanation():
     fig.tight_layout()
     return fig
 
+# ─────────────────────────────────────────────────────────────────────────────
+# LIVE WEBCAM TRACKER CLASS
+# ─────────────────────────────────────────────────────────────────────────────
+class WoundTracker(VideoTransformerBase):
+    def transform(self, frame):
+        img = frame.to_ndarray(format="bgr24")
+        h, w, _ = img.shape
+        
+        # Draw mock optical markers on the live feed
+        # Instrument marker (Blue)
+        cv2.rectangle(img, (w//2 - 30, 50), (w//2 + 30, 110), (255, 0, 0), 3)
+        cv2.putText(img, "INS", (w//2 - 20, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+        
+        # Left wound marker (Red)
+        cv2.rectangle(img, (w//4, h//2 - 20), (w//4 + 40, h//2 + 20), (0, 0, 255), 3)
+        cv2.putText(img, "L1", (w//4 + 5, h//2 + 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
+        
+        # Right wound marker (Red)
+        cv2.rectangle(img, (3*w//4 - 40, h//2 - 20), (3*w//4, h//2 + 20), (0, 0, 255), 3)
+        cv2.putText(img, "R1", (3*w//4 - 35, h//2 + 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
+        
+        return img
+
 def run(student_id=None):
     dept_header("Surgery Simulation", "🔪", student_id)
 
@@ -451,30 +481,16 @@ def run(student_id=None):
     with tabs[2]:
         st.markdown("## 📷 Live Camera Tracker")
         st.markdown("Use your webcam to simulate optical marker tracking. Point your camera at a wound model (or draw markers on paper).")
-        try:
-            import cv2
-            CV2_OK = True
-        except ImportError:
-            CV2_OK = False
-            
-        img_file = st.camera_input("Take a picture of your wound model")
-        if img_file is not None:
-            bytes_data = img_file.getvalue()
-            if CV2_OK:
-                try:
-                    cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
-                    h, w, _ = cv2_img.shape
-                    cv2.rectangle(cv2_img, (w//2 - 30, 50), (w//2 + 30, 110), (255, 0, 0), 3)
-                    cv2.putText(cv2_img, "INS", (w//2 - 20, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
-                    cv2.rectangle(cv2_img, (w//4, h//2 - 20), (w//4 + 40, h//2 + 20), (0, 0, 255), 3)
-                    cv2.putText(cv2_img, "L1", (w//4 + 5, h//2 + 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
-                    cv2.rectangle(cv2_img, (3*w//4 - 40, h//2 - 20), (3*w//4, h//2 + 20), (0, 0, 255), 3)
-                    cv2.putText(cv2_img, "R1", (3*w//4 - 35, h//2 + 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
-                    st.image(cv2_img[:, :, ::-1], channels="BGR", caption="Live Tracker with Mock Markers (Install opencv-python for real ArUco detection)")
-                except Exception as e:
-                    st.error(f"Error processing image: {e}")
-            else:
-                st.image(bytes_data, caption="Webcam capture (Install opencv-python for marker tracking overlay)")
+        
+        if WEBRTC_OK:
+            webrtc_streamer(key="wound_tracker", video_transformer_factory=WoundTracker)
+        else:
+            st.warning("Install `streamlit-webrtc` and `opencv-python` in requirements.txt to enable the live webcam stream.")
+            # Fallback to static image capture if streamlit-webrtc is missing
+            img_file = st.camera_input("Take a picture of your wound model")
+            if img_file is not None:
+                bytes_data = img_file.getvalue()
+                st.image(bytes_data, caption="Webcam capture")
 
     with tabs[3]:
         st.markdown("## My Surgery Progress")

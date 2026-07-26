@@ -24,6 +24,32 @@ try:
 except ImportError:
     pass
 
+try:
+    import SimpleITK as sitk
+    from lungmask import LMInferer
+    LUNGMASK_OK = True
+except ImportError:
+    LUNGMASK_OK = False
+
+try:
+    from totalsegmentator.python_api import totalsegmentator
+    TOTALSEG_OK = True
+except ImportError:
+    TOTALSEG_OK = False
+
+TOTALSEG_STRUCTURES = [
+    "brain", "liver", "spleen", "pancreas", "kidney_left", "kidney_right",
+    "stomach", "gallbladder", "urinary_bladder", "prostate", "uterus",
+    "colon", "small_bowel", "duodenum", "esophagus", "trachea",
+    "lung_upper_lobe_left", "lung_lower_lobe_left", "lung_upper_lobe_right",
+    "lung_middle_lobe_right", "lung_lower_lobe_right",
+    "heart", "aorta", "inferior_vena_cava", "portal_vein_and_splenic_vein",
+    "adrenal_gland_left", "adrenal_gland_right", "thyroid_gland",
+    "vertebrae_L5", "vertebrae_L4", "vertebrae_L3", "vertebrae_L2", "vertebrae_L1",
+    "hip_left", "hip_right", "femur_left", "femur_right", "sacrum",
+    "skull", "spinal_cord", "rib_left_1", "rib_right_1",
+]
+
 from scipy.ndimage import gaussian_filter as _gf
 
 def _perlin_like_noise(shape, scales=(4, 8, 16, 32), weights=(0.45, 0.30, 0.18, 0.07), seed=42):
@@ -253,6 +279,46 @@ TISSUE_BANDS = [
     ("Cortical Bone",   400, 2000,    700, "lightcoral"),
 ]
 
+@st.cache_resource(show_spinner=False)
+def _get_lungmask_inferer():
+    return LMInferer()  # loads the pretrained U-net(R231) model, cached once per session
+
+def _run_lungmask(vol, spacing):
+    """Run the pretrained lungmask U-Net on a HU volume.
+    vol: numpy array (nz, ny, nx) in Hounsfield Units.
+    spacing: (dz, dy, dx) in mm, matching this app's existing spacing convention.
+    Returns an integer mask array of the same shape: 0=background, 1=right lung, 2=left lung.
+    """
+    img = sitk.GetImageFromArray(vol.astype(np.int16))
+    img.SetSpacing((float(spacing[2]), float(spacing[1]), float(spacing[0])))  # SimpleITK wants (x, y, z)
+    inferer = _get_lungmask_inferer()
+    return inferer.apply(img)
+
+def _run_totalsegmentator(vol, spacing, roi_subset, fast=True):
+    """Run the pretrained TotalSegmentator model on a HU volume.
+    vol: numpy array (nz, ny, nx) in Hounsfield Units.
+    spacing: (dz, dy, dx) in mm.
+    roi_subset: list of structure names to segment (keeps inference fast/light).
+    Returns a dict {structure_name: boolean mask array (nz, ny, nx)}.
+    """
+    import tempfile, os
+    import nibabel as _nib
+    affine = np.diag([spacing[2], spacing[1], spacing[0], 1]).astype(np.float64)
+    nifti_data = np.transpose(vol, (2, 1, 0)).astype(np.int16)  # nibabel wants (x, y, z)
+    img_nifti = _nib.Nifti1Image(nifti_data, affine)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        in_path = os.path.join(tmpdir, "input.nii.gz")
+        out_dir = os.path.join(tmpdir, "output")
+        img_nifti.to_filename(in_path)
+        totalsegmentator(in_path, out_dir, fast=fast, roi_subset=roi_subset, quiet=True)
+        masks = {}
+        for name in roi_subset:
+            mpath = os.path.join(out_dir, f"{name}.nii.gz")
+            if os.path.exists(mpath):
+                m = _nib.load(mpath).get_fdata()
+                masks[name] = np.transpose(m, (2, 1, 0)) > 0  # back to (nz, ny, nx)
+    return masks
+
 def _slice_to_img(arr2d, wl, ww):
     lo, hi = wl - ww / 2, wl + ww / 2
     clipped = np.clip(arr2d, lo, hi)
@@ -321,7 +387,7 @@ def _extract_spacing(ds):
 def _load_dicom_zip(raw_bytes):
     if not DICOM_OK:
         st.error("pydicom not installed. Run: pip install pydicom")
-        return None, None
+        return None, None, None
     loaded = []
     with zipfile.ZipFile(io.BytesIO(raw_bytes)) as zf:
         for name in zf.namelist():
@@ -345,7 +411,7 @@ def _load_dicom_zip(raw_bytes):
                 pass
     if not loaded:
         st.error("No valid DICOM slices found in ZIP.")
-        return None, None
+        return None, None, None
 
     def sortfunc(item):
         k = item[0]
@@ -358,7 +424,8 @@ def _load_dicom_zip(raw_bytes):
     vol = np.concatenate([item[1] for item in loaded], axis=0).astype(np.float32)
     vol = _ensure_3d(vol)
     spacing = _extract_spacing(loaded[0][2])
-    return vol, spacing
+    modality = str(getattr(loaded[0][2], "Modality", "") or "").upper()
+    return vol, spacing, modality
 
 def _render_annotated_histogram(sl_flat, show_labels=True):
     fig, ax = plt.subplots(figsize=(9, 3.5), constrained_layout=True)
@@ -443,6 +510,7 @@ def render(student_id: str):
                     st.session_state["ct_volume"] = st.session_state.ct_vol
                     st.session_state.ct_label = label
                     st.session_state.ct_spacing = (0.5, 0.5, 0.5)
+                    st.session_state["ct_modality"] = "CT"
                 st.success(f"✅ {label} loaded — {st.session_state.ct_vol.shape[0]} slices")
 
         with col2:
@@ -450,8 +518,9 @@ def render(student_id: str):
             up = st.file_uploader("Upload DICOM ZIP", type=["zip", "dcm"])
             if up and st.button("📤 Load DICOM", key="load_dicom"):
                 raw = up.getvalue()
+                modality = None
                 if up.name.lower().endswith(".zip"):
-                    vol, spacing = _load_dicom_zip(raw)
+                    vol, spacing, modality = _load_dicom_zip(raw)
                 else:
                     if not DICOM_OK:
                         st.error("pydicom not installed")
@@ -465,6 +534,7 @@ def render(student_id: str):
                             vol, spacing = None, None
                         if ds is not None:
                             try:
+                                modality = str(getattr(ds, "Modality", "") or "").upper()
                                 arr = ds.pixel_array.astype(np.float32)
                                 arr = arr * float(getattr(ds, "RescaleSlope", 1)) + float(getattr(ds, "RescaleIntercept", 0))
                                 vol = _ensure_3d(arr)
@@ -478,7 +548,16 @@ def render(student_id: str):
                     st.session_state["ct_volume"] = vol
                     st.session_state.ct_label = up.name
                     st.session_state.ct_spacing = spacing
+                    st.session_state["ct_modality"] = modality
                     r, c, s = spacing
+                    if modality and modality != "CT":
+                        st.warning(
+                            f"⚠️ This file's DICOM Modality tag says **{modality}**, not CT. "
+                            "This module assumes pixel values are Hounsfield Units, which only CT scans have. "
+                            "For MR (and other non-CT modalities), the HU windows, presets, and 3D thresholds below "
+                            "won't correspond to real tissue density -- the render will look strange because it's "
+                            "reading the wrong kind of data, not because anything crashed."
+                        )
                     st.success(f"✅ DICOM loaded — {vol.shape[0]} slices, {vol.shape[1]}×{vol.shape[2]}, spacing {r:.2f}×{c:.2f}×{s:.2f} mm")
 
         if "ct_vol" not in st.session_state:
@@ -490,6 +569,9 @@ def render(student_id: str):
     st.session_state.ct_vol = vol
     st.session_state["ct_volume"] = vol
     spacing = st.session_state.get("ct_spacing", (0.5, 0.5, 0.5))
+    _modality = st.session_state.get("ct_modality")
+    if _modality and _modality != "CT":
+        st.warning(f"⚠️ Loaded data is **{_modality}**, not CT -- HU-based windowing/thresholds below won't be meaningful for this modality.")
     nz, ny, nx = vol.shape
     voxel_ml = (spacing[0] * spacing[1] * spacing[2]) / 1000.0
 
@@ -708,6 +790,32 @@ def render(student_id: str):
             with _c3:
                 _ds = st.slider("Downsample (1=full, 4=fast)", 1, 4, 2, key="ct3d_ds")
             _render_mode = st.radio("Render mode", ["🌫️ Volume Cloud", "🗿 Isosurface (solid)"], horizontal=True, key="ct3d_mode")
+
+            _use_ai_lung = False
+            if LUNGMASK_OK:
+                _use_ai_lung = st.checkbox(
+                    "🫁 Use AI lung segmentation (pretrained lungmask model)",
+                    help="Instead of just an HU threshold, run a pretrained U-Net (lungmask/R231) to find the actual lung boundaries and render only those voxels.",
+                    key="ct3d_use_lungmask",
+                )
+            else:
+                st.caption("ℹ️ AI lung segmentation isn't available -- install the `lungmask` and `SimpleITK` packages to enable it.")
+
+            _organ_picks = []
+            _ts_fast = True
+            if TOTALSEG_OK:
+                _organ_picks = st.multiselect(
+                    "🧠 Use AI multi-organ segmentation (pretrained TotalSegmentator)",
+                    options=TOTALSEG_STRUCTURES,
+                    help="Segments the exact structure(s) you pick (brain, liver, spleen, kidneys, bones, pelvic organs, etc.) using a pretrained model, and renders only those voxels instead of a raw HU-threshold blob.",
+                    key="ct3d_ts_structures",
+                )
+                if _organ_picks:
+                    _ts_fast = st.checkbox("⚡ Fast mode (lower resolution, quicker)", value=True, key="ct3d_ts_fast")
+                    st.caption("⏳ Multi-organ segmentation can take anywhere from ~30s to a few minutes depending on the server -- it's a real model doing real inference, not instant.")
+            else:
+                st.caption("ℹ️ AI multi-organ segmentation isn't available -- install the `totalsegmentator` package to enable it.")
+
             if st.button("🚀 Render 3-D", key="ct3d_render", type="primary"):
                 import plotly.graph_objects as go
                 # Don't let the downsample stride collapse a thin axis (e.g. z=2
@@ -718,6 +826,31 @@ def render(student_id: str):
                 _ds_y = min(_ds, max(1, _vol3d.shape[1] // 2))
                 _ds_x = min(_ds, max(1, _vol3d.shape[2] // 2))
                 _v = _vol3d[::_ds_z, ::_ds_y, ::_ds_x].astype(np.float32)
+                _ds_spacing = (spacing[0] * _ds_z, spacing[1] * _ds_y, spacing[2] * _ds_x)
+
+                if _use_ai_lung:
+                    with st.spinner("Running pretrained lung segmentation model..."):
+                        try:
+                            _lung_mask = _run_lungmask(_v, _ds_spacing)
+                            _v = np.where(_lung_mask > 0, _v, -2000)  # exclude everything outside the AI-predicted lung
+                        except Exception as _seg_e:
+                            st.error(f"AI lung segmentation failed, falling back to plain HU thresholding: {_seg_e}")
+
+                if _organ_picks:
+                    with st.spinner(f"Running pretrained multi-organ segmentation for {', '.join(_organ_picks)}..."):
+                        try:
+                            _organ_masks = _run_totalsegmentator(_v, _ds_spacing, _organ_picks, fast=_ts_fast)
+                            if _organ_masks:
+                                _combined = np.zeros(_v.shape, dtype=bool)
+                                for _name, _m in _organ_masks.items():
+                                    if _m.shape == _combined.shape:
+                                        _combined |= _m
+                                _v = np.where(_combined, _v, -2000)  # exclude everything outside the selected structures
+                            else:
+                                st.warning("No matching structures found in the output -- check the structure names or try without Fast mode.")
+                        except Exception as _seg_e:
+                            st.error(f"AI multi-organ segmentation failed, falling back to plain HU thresholding: {_seg_e}")
+
                 _v = np.clip(_v, _lo, _hi)
                 _nz, _ny, _nx = _v.shape
                 _zz, _yy, _xx = np.mgrid[0:_nz, 0:_ny, 0:_nx]

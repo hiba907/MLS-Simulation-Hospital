@@ -384,11 +384,12 @@ def _extract_spacing(ds):
         st_mm = 0.5
     return (row_mm, col_mm, st_mm)
 
-def _load_dicom_zip(raw_bytes):
+def _load_dicom_zip(raw_bytes, max_voxels=100_000_000):
     if not DICOM_OK:
         st.error("pydicom not installed. Run: pip install pydicom")
         return None, None, None
     loaded = []
+    meta_ds = None  # only keep ONE dataset around, for spacing/modality -- not all of them
     with zipfile.ZipFile(io.BytesIO(raw_bytes)) as zf:
         for name in zf.namelist():
             if not name.lower().endswith(".dcm"):
@@ -400,13 +401,19 @@ def _load_dicom_zip(raw_bytes):
                 slope = float(getattr(ds, "RescaleSlope", 1))
                 inter = float(getattr(ds, "RescaleIntercept", 0))
                 arr = arr * slope + inter
-                arr = _ensure_3d(arr)
+                arr = arr[np.newaxis, :, :]  # (H, W) -> (1, H, W); the full volume gets the ensure_3d padding once, after concatenation
                 sort_key = (
                     getattr(ds, "InstanceNumber", None)
                     or getattr(ds, "SliceLocation", None)
                     or name
                 )
-                loaded.append((sort_key, arr, ds))
+                if meta_ds is None:
+                    meta_ds = ds
+                # Don't keep the full Dataset per slice -- it internally caches its own
+                # decoded pixel buffer, so holding hundreds of them alongside our own
+                # arr copies roughly doubles memory use on real multi-slice series and
+                # can OOM-crash a free-tier deployment.
+                loaded.append((sort_key, arr))
             except Exception:
                 pass
     if not loaded:
@@ -422,9 +429,17 @@ def _load_dicom_zip(raw_bytes):
 
     loaded.sort(key=sortfunc)
     vol = np.concatenate([item[1] for item in loaded], axis=0).astype(np.float32)
+    loaded = None  # free the per-slice list promptly rather than waiting for GC
     vol = _ensure_3d(vol)
-    spacing = _extract_spacing(loaded[0][2])
-    modality = str(getattr(loaded[0][2], "Modality", "") or "").upper()
+
+    if vol.size > max_voxels:
+        orig_voxels = vol.size
+        step = int(np.ceil((orig_voxels / max_voxels) ** (1 / 3)))
+        vol = np.ascontiguousarray(vol[::step, ::step, ::step])
+        st.info(f"ℹ️ This series is large ({orig_voxels:,} voxels) -- automatically downsampled by {step}x in each direction to fit comfortably in memory. Coronal/Sagittal/3D will be slightly lower-resolution as a result.")
+
+    spacing = _extract_spacing(meta_ds)
+    modality = str(getattr(meta_ds, "Modality", "") or "").upper()
     return vol, spacing, modality
 
 def _render_annotated_histogram(sl_flat, show_labels=True):

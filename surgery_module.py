@@ -15,6 +15,14 @@ try:
 except ImportError:
     MPL_OK = False
 
+try:
+    import cv2
+    import av
+    from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
+    WEBRTC_OK = True
+except ImportError:
+    WEBRTC_OK = False
+
 from shared_session import dept_header, record_session
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -331,6 +339,30 @@ def _draw_marker_explanation():
     fig.tight_layout()
     return fig
 
+# ─────────────────────────────────────────────────────────────────────────────
+# LIVE WEBCAM TRACKER CLASS
+# ─────────────────────────────────────────────────────────────────────────────
+if WEBRTC_OK:
+    class WoundTracker(VideoTransformerBase):
+        def transform(self, frame):
+            img = frame.to_ndarray(format="bgr24")
+            h, w, _ = img.shape
+
+            # Draw mock optical markers on the live feed
+            # Instrument marker (Blue)
+            cv2.rectangle(img, (w//2 - 30, 50), (w//2 + 30, 110), (255, 0, 0), 3)
+            cv2.putText(img, "INS", (w//2 - 20, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+
+            # Left wound marker (Red)
+            cv2.rectangle(img, (w//4, h//2 - 20), (w//4 + 40, h//2 + 20), (0, 0, 255), 3)
+            cv2.putText(img, "L1", (w//4 + 5, h//2 + 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
+
+            # Right wound marker (Red)
+            cv2.rectangle(img, (3*w//4 - 40, h//2 - 20), (3*w//4, h//2 + 20), (0, 0, 255), 3)
+            cv2.putText(img, "R1", (3*w//4 - 35, h//2 + 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
+
+            return img
+
 def run(student_id=None):
     dept_header("Surgery Simulation", "🔪", student_id)
 
@@ -451,26 +483,11 @@ def run(student_id=None):
         st.markdown("## 📷 Live Camera Tracker")
         st.markdown("Use your webcam to simulate optical marker tracking. Point your camera at a wound model (or draw markers on paper).")
         
-        # Dynamically load webrtc inside the tab so it NEVER crashes the rest of the app
-        try:
-            from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
-            import cv2
-
-            class WoundTracker(VideoTransformerBase):
-                def transform(self, frame):
-                    img = frame.to_ndarray(format="bgr24")
-                    h, w, _ = img.shape
-                    cv2.rectangle(img, (w//2 - 30, 50), (w//2 + 30, 110), (255, 0, 0), 3)
-                    cv2.putText(img, "INS", (w//2 - 20, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
-                    cv2.rectangle(img, (w//4, h//2 - 20), (w//4 + 40, h//2 + 20), (0, 0, 255), 3)
-                    cv2.putText(img, "L1", (w//4 + 5, h//2 + 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
-                    cv2.rectangle(img, (3*w//4 - 40, h//2 - 20), (3*w//4, h//2 + 20), (0, 0, 255), 3)
-                    cv2.putText(img, "R1", (3*w//4 - 35, h//2 + 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
-                    return img
-
+        if WEBRTC_OK:
             webrtc_streamer(key="wound_tracker", video_transformer_factory=WoundTracker)
-        except ImportError:
+        else:
             st.warning("Install `streamlit-webrtc` and `opencv-python` in requirements.txt to enable the live webcam stream.")
+            # Fallback to static image capture if streamlit-webrtc is missing
             img_file = st.camera_input("Take a picture of your wound model")
             if img_file is not None:
                 bytes_data = img_file.getvalue()

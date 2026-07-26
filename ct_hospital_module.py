@@ -12,6 +12,8 @@ from shared_session import dept_header, record_session
 
 try:
     import pydicom
+    from pydicom.dataset import Dataset, FileDataset
+    from pydicom.uid import ExplicitVRLittleEndian, generate_uid
     DICOM_OK = True
 except ImportError:
     DICOM_OK = False
@@ -261,6 +263,12 @@ def _scale_up_img(img):
     min_dim = min(img.width, img.height)
     if min_dim < 512:
         scale = 512.0 / min_dim
+        # Cap the resulting longer side so a razor-thin slice (e.g. from a
+        # single-image DICOM upload) can't get blown up into a gigantic
+        # image that crashes PIL/Streamlit when it tries to encode it.
+        max_dim = max(img.width, img.height)
+        if max_dim > 0:
+            scale = min(scale, 2048.0 / max_dim)
         new_w = max(1, int(img.width * scale))
         new_h = max(1, int(img.height * scale))
         return img.resize((new_w, new_h), Image.LANCZOS)
@@ -476,6 +484,8 @@ def render(student_id: str):
     with tab_mpr:
         st.subheader("Multi-Planar Reconstruction")
         st.caption(f"Volume spacing: {spacing[0]:.2f} × {spacing[1]:.2f} × {spacing[2]:.2f} mm  (1 voxel = {voxel_ml * 1000:.3f} mm³ = {voxel_ml:.4f} mL)")
+        if nz <= 2:
+            st.info("ℹ️ This looks like a single 2D image rather than a multi-slice CT series, so there's only one real Axial slice to view. Coronal/Sagittal reconstructions and slice scrolling need a full DICOM series (multiple .dcm files in a .zip) to be meaningful.")
         win_name = st.selectbox("Window preset", list(WINDOWS.keys()), key="mpr_win")
         wl, ww = WINDOWS[win_name]
         c1, c2, c3 = st.columns(3)

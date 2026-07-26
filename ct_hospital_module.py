@@ -12,8 +12,6 @@ from shared_session import dept_header, record_session
 
 try:
     import pydicom
-    from pydicom.dataset import Dataset, FileDataset
-    from pydicom.uid import ExplicitVRLittleEndian, generate_uid
     DICOM_OK = True
 except ImportError:
     DICOM_OK = False

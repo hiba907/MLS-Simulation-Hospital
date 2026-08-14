@@ -1,0 +1,42 @@
+{
+  "patient_id": "CHANGE_ME_to_something_unique",
+  "age_at_admission": 58,
+  "sex": "M",
+  "admission_date": "2026-01-15",
+  "discharge_date": "2026-01-20",
+  "primary_diagnosis": "Acute inferior STEMI, RCA occlusion",
+
+  "free_text_notes": [
+    "CHIEF COMPLAINT: substernal chest pain for 90 minutes.",
+    "HPI: The patient is a 58-year-old male who developed crushing substernal chest pain 90 minutes prior to arrival while watching TV. The pain radiates to his left arm and jaw, severity 8/10, associated with diaphoresis and nausea. He denies syncope, palpitations, fever, or shortness of breath. He has never had pain like this before.",
+    "PMH: hypertension for 10 years, type 2 diabetes mellitus for 8 years.",
+    "MEDICATIONS: amlodipine 5 mg once daily, metformin 1000 mg twice daily.",
+    "ALLERGIES: no known drug allergies.",
+    "FAMILY HISTORY: father died of myocardial infarction at age 62.",
+    "SOCIAL HISTORY: 30 pack-year smoking history, occasional alcohol, retired teacher.",
+    "PHYSICAL EXAM: BP 92/60, HR 108, RR 22, SpO2 91% on room air, T 36.8C. Diaphoretic, anxious, in moderate distress. Lungs clear. No JVD. Heart regular rate and rhythm, no murmurs. Abdomen soft, non-tender.",
+    "ECG: ST elevation in leads II, III, aVF with reciprocal changes in I and aVL. Normal sinus rhythm at 98 bpm.",
+    "ECHO: EF 30%, inferior wall hypokinesis, no pericardial effusion, mild mitral regurgitation.",
+    "LABS: Troponin I 4.8 ng/mL, creatinine 1.4 mg/dL, glucose 218 mg/dL, potassium 4.2, hemoglobin 14.1, platelets 245, INR 1.0.",
+    "PROCEDURE: emergent cardiac catheterization via right radial access. PCI to RCA with drug-eluting stent placement. TIMI 3 flow restored. Door-to-balloon time 68 minutes.",
+    "HOSPITAL COURSE: admitted to CCU. Started on aspirin 325 mg, ticagrelor 180 mg loading, heparin, atorvastatin 80 mg, metoprolol 12.5 mg, ramipril 2.5 mg. Brief norepinephrine for blood pressure support. Creatinine trended down to 1.2 by discharge. Repeat echo on day 3 showed EF 35%, improved from 30%.",
+    "DISCHARGE: day 5 in stable condition. Discharge medications: aspirin 81 mg daily, ticagrelor 90 mg twice daily, metoprolol 25 mg twice daily, ramipril 5 mg daily, atorvastatin 80 mg daily. Follow-up echocardiogram in 6 weeks. Cardiac rehabilitation referral placed. Smoking cessation counseling provided."
+  ],
+
+  "original_qa": [
+    {"q": "When did the pain start?", "a": "About an hour and a half ago. I was watching TV and it just hit me."},
+    {"q": "Can you describe the pain?", "a": "It's like a crushing pressure on my chest, like someone is sitting on me."},
+    {"q": "Does it go anywhere?", "a": "Yes, into my left arm and up into my jaw."},
+    {"q": "How bad is it?", "a": "8 out of 10. The worst pain I've ever had in my life."},
+    {"q": "Any other symptoms?", "a": "I'm sweating a lot and I feel sick to my stomach."},
+    {"q": "Have you had this before?", "a": "No, never."},
+    {"q": "What makes it better or worse?", "a": "Nothing, it just stays the same."},
+    {"q": "Any medical problems?", "a": "High blood pressure and diabetes, both for years."},
+    {"q": "What medications do you take?", "a": "Amlodipine 5 in the morning. Metformin 1000 mg twice a day."},
+    {"q": "Any allergies?", "a": "No, none."},
+    {"q": "Family history of heart problems?", "a": "My father died of a heart attack at 62. That's why I'm scared."},
+    {"q": "Do you smoke?", "a": "About a pack a day for 30 years. I know I should quit."},
+    {"q": "What did the doctors do?", "a": "They took me to the cath lab and put a stent in. They said I had a heart attack."},
+    {"q": "How do you feel now?", "a": "Better. The pain is gone. But I'm tired and a little scared to go home."}
+  ]
+}

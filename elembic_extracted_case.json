@@ -1,0 +1,3786 @@
+{
+  "id": "elembic_extracted_case",
+  "title": "Mr. Khalil, 58M \u2014 STEMI (extracted from clinical note)",
+  "case_journey": [
+    {
+      "t": -3600,
+      "event": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "type": "exam",
+      "category": "severity",
+      "label": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "presents to the ED with substernal chest pain radiating to the left arm and jaw",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "4f2119c3"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "hypertension",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "hypertension",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "with a history of hypertension",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "10493b08"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "type 2 diabetes mellitus \u2014 on metformin",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "type 2 diabetes mellitus \u2014 on metformin",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "type 2 diabetes mellitus (on metformin)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "6b1cb5d3"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "30 pack-year smoking history \u2014 30 pack-years",
+      "type": "exam",
+      "category": "severity",
+      "label": "30 pack-year smoking history \u2014 30 pack-years",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "30 pack-year smoking history",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "f66bbf9d"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "syncope",
+      "type": "exam",
+      "category": "negated",
+      "label": "syncope",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "He denies syncope or palpitations",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "efd0fc4e"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "MI \u2014 father, at age 62",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "MI \u2014 father, at age 62",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "father with MI at 62",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "e40bf05e"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "BP 88/54 \u2014 hypotension",
+      "type": "exam",
+      "category": "severity",
+      "label": "BP 88/54 \u2014 hypotension",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "BP 88/54, HR 112, RR 22, SpO2 91% on room air",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "c252ecb6"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Troponin I 4.8 ng/mL (markedly elevated)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "58c4b5b6"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Creatinine 1.4 mg/dL",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d5136249"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "type": "exam",
+      "category": "severity",
+      "label": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "12-lead ECG shows ST elevation in leads II, III, aVF",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "27313482"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Bedside echo: EF 30%, inferior wall hypokinesis",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "14ae6933"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Acute inferior STEMI, likely RCA occlusion",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "311765b1"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "cardiogenic shock \u2014 Killip class III",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "cardiogenic shock \u2014 Killip class III",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "complicated by cardiogenic shock (Killip class III)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "34b9fc6f"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Aspirin 325 mg chewed, ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "79371964"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "Ticagrelor 180 mg \u2014 loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ticagrelor 180 mg \u2014 loading dose",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "cf506262"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "heparin bolus 60 U/kg",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "5f72b1c7"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "IV normal saline 500 mL \u2014 bolus",
+      "type": "treatment",
+      "category": "severity",
+      "label": "IV normal saline 500 mL \u2014 bolus",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "IV normal saline 500 mL bolus",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "527b9757"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "contrast allergy",
+      "type": "exam",
+      "category": "negated",
+      "label": "contrast allergy",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Patient denies any history of contrast allergy",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "c0bff7b9"
+      }
+    },
+    {
+      "t": 0,
+      "event": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "type": "procedure",
+      "category": "critical",
+      "label": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "PCI to RCA with drug-eluting stent placement. Door-to-balloon time 68 minutes. TIMI 3 flow restored.",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "993d9640"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Moderate mitral regurgitation \u2014 moderate, new",
+      "type": "exam",
+      "category": "severity",
+      "label": "Moderate mitral regurgitation \u2014 moderate, new",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Moderate mitral regurgitation noted (new)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "b24f6c75"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Atorvastatin 80 mg started",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "24360043"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Metoprolol 12.5 mg initiated once BP tolerated",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "1bf015ed"
+      }
+    },
+    {
+      "t": 172800,
+      "event": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Ramipril 2.5 mg started on day 2 with stable creatinine",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "bfeaa535"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "EF 35% \u2014 improving",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 35% \u2014 improving",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Repeat echo on day 3 showed EF 35% (improving)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "876109d2"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "type": "exam",
+      "category": "severity",
+      "label": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Patient ambulated 50m with assistance on day 3",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "780a7a8d"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Discharged home \u2014 stable condition",
+      "type": "history",
+      "category": "discharge",
+      "label": "Discharged home \u2014 stable condition",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Discharged home on day 5 in stable condition",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "29a320e0"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Cardiac rehab referral \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Cardiac rehab referral \u2014 outpatient",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Cardiac rehab referral placed",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "1f0e28e2"
+      }
+    },
+    {
+      "t": -3600,
+      "event": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "_provenance": {
+        "source_section": "chief_complaint",
+        "source_text": "Follow-up echo scheduled in 6 weeks",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "02592658"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "type": "exam",
+      "category": "severity",
+      "label": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "presents to the ED with substernal chest pain radiating to the left arm and jaw",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "57b11103"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "hypertension",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "hypertension",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "with a history of hypertension",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ce6296f9"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "type 2 diabetes mellitus \u2014 on metformin",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "type 2 diabetes mellitus \u2014 on metformin",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "type 2 diabetes mellitus (on metformin)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "2ca496d1"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "30 pack-year smoking history \u2014 30 pack-years",
+      "type": "exam",
+      "category": "severity",
+      "label": "30 pack-year smoking history \u2014 30 pack-years",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "30 pack-year smoking history",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "dd44e00f"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "syncope",
+      "type": "exam",
+      "category": "negated",
+      "label": "syncope",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "He denies syncope or palpitations",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "93a55e2b"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "MI \u2014 father, at age 62",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "MI \u2014 father, at age 62",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "father with MI at 62",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "3852ea44"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "BP 88/54 \u2014 hypotension",
+      "type": "exam",
+      "category": "severity",
+      "label": "BP 88/54 \u2014 hypotension",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "BP 88/54, HR 112, RR 22, SpO2 91% on room air",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "a43f1db3"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Troponin I 4.8 ng/mL (markedly elevated)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "40e56652"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Creatinine 1.4 mg/dL",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "dcbcd4fc"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "type": "exam",
+      "category": "severity",
+      "label": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "12-lead ECG shows ST elevation in leads II, III, aVF",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "060c4102"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Bedside echo: EF 30%, inferior wall hypokinesis",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "934f30e6"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Acute inferior STEMI, likely RCA occlusion",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "c2bfd3fc"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "cardiogenic shock \u2014 Killip class III",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "cardiogenic shock \u2014 Killip class III",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "complicated by cardiogenic shock (Killip class III)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d32865e8"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Aspirin 325 mg chewed, ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "4c6857fc"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "Ticagrelor 180 mg \u2014 loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ticagrelor 180 mg \u2014 loading dose",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "95e855d5"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "heparin bolus 60 U/kg",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "a8dbfc61"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "IV normal saline 500 mL \u2014 bolus",
+      "type": "treatment",
+      "category": "severity",
+      "label": "IV normal saline 500 mL \u2014 bolus",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "IV normal saline 500 mL bolus",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "9913e671"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "contrast allergy",
+      "type": "exam",
+      "category": "negated",
+      "label": "contrast allergy",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Patient denies any history of contrast allergy",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "2aededd7"
+      }
+    },
+    {
+      "t": 0,
+      "event": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "type": "procedure",
+      "category": "critical",
+      "label": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "PCI to RCA with drug-eluting stent placement. Door-to-balloon time 68 minutes. TIMI 3 flow restored.",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "cd375fd7"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Moderate mitral regurgitation \u2014 moderate, new",
+      "type": "exam",
+      "category": "severity",
+      "label": "Moderate mitral regurgitation \u2014 moderate, new",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Moderate mitral regurgitation noted (new)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "1acd5b82"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Atorvastatin 80 mg started",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "a00e56c1"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Metoprolol 12.5 mg initiated once BP tolerated",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "137137fe"
+      }
+    },
+    {
+      "t": 172800,
+      "event": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Ramipril 2.5 mg started on day 2 with stable creatinine",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "11902f2d"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "EF 35% \u2014 improving",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 35% \u2014 improving",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Repeat echo on day 3 showed EF 35% (improving)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "0b44bc9d"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "type": "exam",
+      "category": "severity",
+      "label": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Patient ambulated 50m with assistance on day 3",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "a14e107d"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Discharged home \u2014 stable condition",
+      "type": "history",
+      "category": "discharge",
+      "label": "Discharged home \u2014 stable condition",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Discharged home on day 5 in stable condition",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "9f6b17c2"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Cardiac rehab referral \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Cardiac rehab referral \u2014 outpatient",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Cardiac rehab referral placed",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "7259cb9d"
+      }
+    },
+    {
+      "t": -1800,
+      "event": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "_provenance": {
+        "source_section": "hpi",
+        "source_text": "Follow-up echo scheduled in 6 weeks",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "e866538e"
+      }
+    },
+    {
+      "t": 0,
+      "event": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "type": "exam",
+      "category": "severity",
+      "label": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "presents to the ED with substernal chest pain radiating to the left arm and jaw",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "05ad0b10"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "hypertension",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "hypertension",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "with a history of hypertension",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "e0779d9b"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "type 2 diabetes mellitus \u2014 on metformin",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "type 2 diabetes mellitus \u2014 on metformin",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "type 2 diabetes mellitus (on metformin)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "9b9f108b"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "30 pack-year smoking history \u2014 30 pack-years",
+      "type": "exam",
+      "category": "severity",
+      "label": "30 pack-year smoking history \u2014 30 pack-years",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "30 pack-year smoking history",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "60bc12a4"
+      }
+    },
+    {
+      "t": 0,
+      "event": "syncope",
+      "type": "exam",
+      "category": "negated",
+      "label": "syncope",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "He denies syncope or palpitations",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "0e71961d"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "MI \u2014 father, at age 62",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "MI \u2014 father, at age 62",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "father with MI at 62",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "59055807"
+      }
+    },
+    {
+      "t": 0,
+      "event": "BP 88/54 \u2014 hypotension",
+      "type": "exam",
+      "category": "severity",
+      "label": "BP 88/54 \u2014 hypotension",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "BP 88/54, HR 112, RR 22, SpO2 91% on room air",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "e0bbb2ca"
+      }
+    },
+    {
+      "t": 0,
+      "event": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Troponin I 4.8 ng/mL (markedly elevated)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "22fe5d39"
+      }
+    },
+    {
+      "t": 0,
+      "event": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Creatinine 1.4 mg/dL",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "f47707a8"
+      }
+    },
+    {
+      "t": 0,
+      "event": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "type": "exam",
+      "category": "severity",
+      "label": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "12-lead ECG shows ST elevation in leads II, III, aVF",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "da4112ed"
+      }
+    },
+    {
+      "t": 0,
+      "event": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Bedside echo: EF 30%, inferior wall hypokinesis",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "12e94188"
+      }
+    },
+    {
+      "t": 0,
+      "event": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Acute inferior STEMI, likely RCA occlusion",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "e0beef3d"
+      }
+    },
+    {
+      "t": 0,
+      "event": "cardiogenic shock \u2014 Killip class III",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "cardiogenic shock \u2014 Killip class III",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "complicated by cardiogenic shock (Killip class III)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "8dc434b8"
+      }
+    },
+    {
+      "t": 0,
+      "event": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Aspirin 325 mg chewed, ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "6a0ed77d"
+      }
+    },
+    {
+      "t": 0,
+      "event": "Ticagrelor 180 mg \u2014 loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ticagrelor 180 mg \u2014 loading dose",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "7cb31399"
+      }
+    },
+    {
+      "t": 0,
+      "event": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "heparin bolus 60 U/kg",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "3b2a8c96"
+      }
+    },
+    {
+      "t": 0,
+      "event": "IV normal saline 500 mL \u2014 bolus",
+      "type": "treatment",
+      "category": "severity",
+      "label": "IV normal saline 500 mL \u2014 bolus",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "IV normal saline 500 mL bolus",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "64115624"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "contrast allergy",
+      "type": "exam",
+      "category": "negated",
+      "label": "contrast allergy",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Patient denies any history of contrast allergy",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "225197e3"
+      }
+    },
+    {
+      "t": 0,
+      "event": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "type": "procedure",
+      "category": "critical",
+      "label": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "PCI to RCA with drug-eluting stent placement. Door-to-balloon time 68 minutes. TIMI 3 flow restored.",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "924a726e"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Moderate mitral regurgitation \u2014 moderate, new",
+      "type": "exam",
+      "category": "severity",
+      "label": "Moderate mitral regurgitation \u2014 moderate, new",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Moderate mitral regurgitation noted (new)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "85cb6ed9"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Atorvastatin 80 mg started",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "726d5129"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Metoprolol 12.5 mg initiated once BP tolerated",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "6d3d3ddc"
+      }
+    },
+    {
+      "t": 172800,
+      "event": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Ramipril 2.5 mg started on day 2 with stable creatinine",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "fba1c0c3"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "EF 35% \u2014 improving",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 35% \u2014 improving",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Repeat echo on day 3 showed EF 35% (improving)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ed92896d"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "type": "exam",
+      "category": "severity",
+      "label": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Patient ambulated 50m with assistance on day 3",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "298e54f3"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Discharged home \u2014 stable condition",
+      "type": "history",
+      "category": "discharge",
+      "label": "Discharged home \u2014 stable condition",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Discharged home on day 5 in stable condition",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "05c8f719"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Cardiac rehab referral \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Cardiac rehab referral \u2014 outpatient",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Cardiac rehab referral placed",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ee59b797"
+      }
+    },
+    {
+      "t": 0,
+      "event": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "_provenance": {
+        "source_section": "medications",
+        "source_text": "Follow-up echo scheduled in 6 weeks",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "887ed8c6"
+      }
+    },
+    {
+      "t": 30,
+      "event": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "type": "exam",
+      "category": "severity",
+      "label": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "presents to the ED with substernal chest pain radiating to the left arm and jaw",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ad607ce8"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "hypertension",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "hypertension",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "with a history of hypertension",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "af09a257"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "type 2 diabetes mellitus \u2014 on metformin",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "type 2 diabetes mellitus \u2014 on metformin",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "type 2 diabetes mellitus (on metformin)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "fe53de7d"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "30 pack-year smoking history \u2014 30 pack-years",
+      "type": "exam",
+      "category": "severity",
+      "label": "30 pack-year smoking history \u2014 30 pack-years",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "30 pack-year smoking history",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d1f791d3"
+      }
+    },
+    {
+      "t": 30,
+      "event": "syncope",
+      "type": "exam",
+      "category": "negated",
+      "label": "syncope",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "He denies syncope or palpitations",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "0c0a7e7b"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "MI \u2014 father, at age 62",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "MI \u2014 father, at age 62",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "father with MI at 62",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "2fc56527"
+      }
+    },
+    {
+      "t": 30,
+      "event": "BP 88/54 \u2014 hypotension",
+      "type": "exam",
+      "category": "severity",
+      "label": "BP 88/54 \u2014 hypotension",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "BP 88/54, HR 112, RR 22, SpO2 91% on room air",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "2201ed03"
+      }
+    },
+    {
+      "t": 30,
+      "event": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Troponin I 4.8 ng/mL (markedly elevated)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "9e55555b"
+      }
+    },
+    {
+      "t": 30,
+      "event": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Creatinine 1.4 mg/dL",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "cf7b6217"
+      }
+    },
+    {
+      "t": 30,
+      "event": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "type": "exam",
+      "category": "severity",
+      "label": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "12-lead ECG shows ST elevation in leads II, III, aVF",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "70d6398b"
+      }
+    },
+    {
+      "t": 30,
+      "event": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Bedside echo: EF 30%, inferior wall hypokinesis",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "14791691"
+      }
+    },
+    {
+      "t": 30,
+      "event": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Acute inferior STEMI, likely RCA occlusion",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "f84d4d0d"
+      }
+    },
+    {
+      "t": 30,
+      "event": "cardiogenic shock \u2014 Killip class III",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "cardiogenic shock \u2014 Killip class III",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "complicated by cardiogenic shock (Killip class III)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "48e9aa3e"
+      }
+    },
+    {
+      "t": 30,
+      "event": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Aspirin 325 mg chewed, ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "4051dd6b"
+      }
+    },
+    {
+      "t": 30,
+      "event": "Ticagrelor 180 mg \u2014 loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ticagrelor 180 mg \u2014 loading dose",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "328a158a"
+      }
+    },
+    {
+      "t": 30,
+      "event": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "heparin bolus 60 U/kg",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d1c47059"
+      }
+    },
+    {
+      "t": 30,
+      "event": "IV normal saline 500 mL \u2014 bolus",
+      "type": "treatment",
+      "category": "severity",
+      "label": "IV normal saline 500 mL \u2014 bolus",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "IV normal saline 500 mL bolus",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "4a23db58"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "contrast allergy",
+      "type": "exam",
+      "category": "negated",
+      "label": "contrast allergy",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Patient denies any history of contrast allergy",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "88d3881a"
+      }
+    },
+    {
+      "t": 0,
+      "event": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "type": "procedure",
+      "category": "critical",
+      "label": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "PCI to RCA with drug-eluting stent placement. Door-to-balloon time 68 minutes. TIMI 3 flow restored.",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "313fd4d8"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Moderate mitral regurgitation \u2014 moderate, new",
+      "type": "exam",
+      "category": "severity",
+      "label": "Moderate mitral regurgitation \u2014 moderate, new",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Moderate mitral regurgitation noted (new)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "7df73487"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Atorvastatin 80 mg started",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ab45e732"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Metoprolol 12.5 mg initiated once BP tolerated",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "5195360f"
+      }
+    },
+    {
+      "t": 172800,
+      "event": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Ramipril 2.5 mg started on day 2 with stable creatinine",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ff09e0f8"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "EF 35% \u2014 improving",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 35% \u2014 improving",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Repeat echo on day 3 showed EF 35% (improving)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "a933f593"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "type": "exam",
+      "category": "severity",
+      "label": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Patient ambulated 50m with assistance on day 3",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "94fa39b0"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Discharged home \u2014 stable condition",
+      "type": "history",
+      "category": "discharge",
+      "label": "Discharged home \u2014 stable condition",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Discharged home on day 5 in stable condition",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "cbb12788"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Cardiac rehab referral \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Cardiac rehab referral \u2014 outpatient",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Cardiac rehab referral placed",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "258b8e0c"
+      }
+    },
+    {
+      "t": 30,
+      "event": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "_provenance": {
+        "source_section": "vitals",
+        "source_text": "Follow-up echo scheduled in 6 weeks",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "24e95338"
+      }
+    },
+    {
+      "t": 60,
+      "event": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "type": "exam",
+      "category": "severity",
+      "label": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "presents to the ED with substernal chest pain radiating to the left arm and jaw",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d4a4ba26"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "hypertension",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "hypertension",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "with a history of hypertension",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "35e14940"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "type 2 diabetes mellitus \u2014 on metformin",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "type 2 diabetes mellitus \u2014 on metformin",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "type 2 diabetes mellitus (on metformin)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "6a963ae0"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "30 pack-year smoking history \u2014 30 pack-years",
+      "type": "exam",
+      "category": "severity",
+      "label": "30 pack-year smoking history \u2014 30 pack-years",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "30 pack-year smoking history",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "5102f109"
+      }
+    },
+    {
+      "t": 60,
+      "event": "syncope",
+      "type": "exam",
+      "category": "negated",
+      "label": "syncope",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "He denies syncope or palpitations",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "8d6ccf24"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "MI \u2014 father, at age 62",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "MI \u2014 father, at age 62",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "father with MI at 62",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d65140d0"
+      }
+    },
+    {
+      "t": 60,
+      "event": "BP 88/54 \u2014 hypotension",
+      "type": "exam",
+      "category": "severity",
+      "label": "BP 88/54 \u2014 hypotension",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "BP 88/54, HR 112, RR 22, SpO2 91% on room air",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "fff03dd9"
+      }
+    },
+    {
+      "t": 60,
+      "event": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Troponin I 4.8 ng/mL (markedly elevated)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d636e15f"
+      }
+    },
+    {
+      "t": 60,
+      "event": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Creatinine 1.4 mg/dL",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "5c4fdbc8"
+      }
+    },
+    {
+      "t": 60,
+      "event": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "type": "exam",
+      "category": "severity",
+      "label": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "12-lead ECG shows ST elevation in leads II, III, aVF",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "3f034aef"
+      }
+    },
+    {
+      "t": 60,
+      "event": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Bedside echo: EF 30%, inferior wall hypokinesis",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "06dd5ce2"
+      }
+    },
+    {
+      "t": 60,
+      "event": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Acute inferior STEMI, likely RCA occlusion",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "c693fcfd"
+      }
+    },
+    {
+      "t": 60,
+      "event": "cardiogenic shock \u2014 Killip class III",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "cardiogenic shock \u2014 Killip class III",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "complicated by cardiogenic shock (Killip class III)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "c4ffe1a6"
+      }
+    },
+    {
+      "t": 60,
+      "event": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Aspirin 325 mg chewed, ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "a1e14b31"
+      }
+    },
+    {
+      "t": 60,
+      "event": "Ticagrelor 180 mg \u2014 loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ticagrelor 180 mg \u2014 loading dose",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "dd77dc5a"
+      }
+    },
+    {
+      "t": 60,
+      "event": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "heparin bolus 60 U/kg",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "53de1517"
+      }
+    },
+    {
+      "t": 60,
+      "event": "IV normal saline 500 mL \u2014 bolus",
+      "type": "treatment",
+      "category": "severity",
+      "label": "IV normal saline 500 mL \u2014 bolus",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "IV normal saline 500 mL bolus",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "42be110d"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "contrast allergy",
+      "type": "exam",
+      "category": "negated",
+      "label": "contrast allergy",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Patient denies any history of contrast allergy",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "dada8de7"
+      }
+    },
+    {
+      "t": 0,
+      "event": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "type": "procedure",
+      "category": "critical",
+      "label": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "PCI to RCA with drug-eluting stent placement. Door-to-balloon time 68 minutes. TIMI 3 flow restored.",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "18a821c5"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Moderate mitral regurgitation \u2014 moderate, new",
+      "type": "exam",
+      "category": "severity",
+      "label": "Moderate mitral regurgitation \u2014 moderate, new",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Moderate mitral regurgitation noted (new)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d379346a"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Atorvastatin 80 mg started",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "2c39e2be"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Metoprolol 12.5 mg initiated once BP tolerated",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "a762603d"
+      }
+    },
+    {
+      "t": 172800,
+      "event": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Ramipril 2.5 mg started on day 2 with stable creatinine",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "cced7346"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "EF 35% \u2014 improving",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 35% \u2014 improving",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Repeat echo on day 3 showed EF 35% (improving)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "75c62290"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "type": "exam",
+      "category": "severity",
+      "label": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Patient ambulated 50m with assistance on day 3",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "37cd6a8b"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Discharged home \u2014 stable condition",
+      "type": "history",
+      "category": "discharge",
+      "label": "Discharged home \u2014 stable condition",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Discharged home on day 5 in stable condition",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "171cf521"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Cardiac rehab referral \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Cardiac rehab referral \u2014 outpatient",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Cardiac rehab referral placed",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "dbd6d71d"
+      }
+    },
+    {
+      "t": 60,
+      "event": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "_provenance": {
+        "source_section": "exam",
+        "source_text": "Follow-up echo scheduled in 6 weeks",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "2016053a"
+      }
+    },
+    {
+      "t": 300,
+      "event": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "type": "exam",
+      "category": "severity",
+      "label": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "presents to the ED with substernal chest pain radiating to the left arm and jaw",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "1d506163"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "hypertension",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "hypertension",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "with a history of hypertension",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "9179e3e7"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "type 2 diabetes mellitus \u2014 on metformin",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "type 2 diabetes mellitus \u2014 on metformin",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "type 2 diabetes mellitus (on metformin)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "dc417248"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "30 pack-year smoking history \u2014 30 pack-years",
+      "type": "exam",
+      "category": "severity",
+      "label": "30 pack-year smoking history \u2014 30 pack-years",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "30 pack-year smoking history",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "145ee63a"
+      }
+    },
+    {
+      "t": 300,
+      "event": "syncope",
+      "type": "exam",
+      "category": "negated",
+      "label": "syncope",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "He denies syncope or palpitations",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "6907429a"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "MI \u2014 father, at age 62",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "MI \u2014 father, at age 62",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "father with MI at 62",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "adee1aab"
+      }
+    },
+    {
+      "t": 300,
+      "event": "BP 88/54 \u2014 hypotension",
+      "type": "exam",
+      "category": "severity",
+      "label": "BP 88/54 \u2014 hypotension",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "BP 88/54, HR 112, RR 22, SpO2 91% on room air",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "6fb3872e"
+      }
+    },
+    {
+      "t": 300,
+      "event": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Troponin I 4.8 ng/mL (markedly elevated)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "06b0e688"
+      }
+    },
+    {
+      "t": 300,
+      "event": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Creatinine 1.4 mg/dL",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "a5f594ee"
+      }
+    },
+    {
+      "t": 300,
+      "event": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "type": "exam",
+      "category": "severity",
+      "label": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "12-lead ECG shows ST elevation in leads II, III, aVF",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "26afb799"
+      }
+    },
+    {
+      "t": 300,
+      "event": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Bedside echo: EF 30%, inferior wall hypokinesis",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "cd57b89e"
+      }
+    },
+    {
+      "t": 300,
+      "event": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Acute inferior STEMI, likely RCA occlusion",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d1397a6c"
+      }
+    },
+    {
+      "t": 300,
+      "event": "cardiogenic shock \u2014 Killip class III",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "cardiogenic shock \u2014 Killip class III",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "complicated by cardiogenic shock (Killip class III)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "55cf8f72"
+      }
+    },
+    {
+      "t": 300,
+      "event": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Aspirin 325 mg chewed, ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "14ca0d57"
+      }
+    },
+    {
+      "t": 300,
+      "event": "Ticagrelor 180 mg \u2014 loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ticagrelor 180 mg \u2014 loading dose",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "bb11fa05"
+      }
+    },
+    {
+      "t": 300,
+      "event": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "heparin bolus 60 U/kg",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "db04339a"
+      }
+    },
+    {
+      "t": 300,
+      "event": "IV normal saline 500 mL \u2014 bolus",
+      "type": "treatment",
+      "category": "severity",
+      "label": "IV normal saline 500 mL \u2014 bolus",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "IV normal saline 500 mL bolus",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "c9322807"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "contrast allergy",
+      "type": "exam",
+      "category": "negated",
+      "label": "contrast allergy",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Patient denies any history of contrast allergy",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ad15ad65"
+      }
+    },
+    {
+      "t": 0,
+      "event": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "type": "procedure",
+      "category": "critical",
+      "label": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "PCI to RCA with drug-eluting stent placement. Door-to-balloon time 68 minutes. TIMI 3 flow restored.",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "5d892896"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Moderate mitral regurgitation \u2014 moderate, new",
+      "type": "exam",
+      "category": "severity",
+      "label": "Moderate mitral regurgitation \u2014 moderate, new",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Moderate mitral regurgitation noted (new)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "fba10141"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Atorvastatin 80 mg started",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d5b973a3"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Metoprolol 12.5 mg initiated once BP tolerated",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "06738ba8"
+      }
+    },
+    {
+      "t": 172800,
+      "event": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Ramipril 2.5 mg started on day 2 with stable creatinine",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ebf16988"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "EF 35% \u2014 improving",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 35% \u2014 improving",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Repeat echo on day 3 showed EF 35% (improving)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "bc4ecb7b"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "type": "exam",
+      "category": "severity",
+      "label": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Patient ambulated 50m with assistance on day 3",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "e2b7401a"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Discharged home \u2014 stable condition",
+      "type": "history",
+      "category": "discharge",
+      "label": "Discharged home \u2014 stable condition",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Discharged home on day 5 in stable condition",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "50361c95"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Cardiac rehab referral \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Cardiac rehab referral \u2014 outpatient",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Cardiac rehab referral placed",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "46a6f2ab"
+      }
+    },
+    {
+      "t": 300,
+      "event": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "_provenance": {
+        "source_section": "labs",
+        "source_text": "Follow-up echo scheduled in 6 weeks",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "44d88d70"
+      }
+    },
+    {
+      "t": 600,
+      "event": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "type": "exam",
+      "category": "severity",
+      "label": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "presents to the ED with substernal chest pain radiating to the left arm and jaw",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "97cc1d31"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "hypertension",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "hypertension",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "with a history of hypertension",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "f0b8134e"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "type 2 diabetes mellitus \u2014 on metformin",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "type 2 diabetes mellitus \u2014 on metformin",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "type 2 diabetes mellitus (on metformin)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "afeb8c52"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "30 pack-year smoking history \u2014 30 pack-years",
+      "type": "exam",
+      "category": "severity",
+      "label": "30 pack-year smoking history \u2014 30 pack-years",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "30 pack-year smoking history",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "65bcfe6a"
+      }
+    },
+    {
+      "t": 600,
+      "event": "syncope",
+      "type": "exam",
+      "category": "negated",
+      "label": "syncope",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "He denies syncope or palpitations",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "44b42e54"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "MI \u2014 father, at age 62",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "MI \u2014 father, at age 62",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "father with MI at 62",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "5fd34e5c"
+      }
+    },
+    {
+      "t": 600,
+      "event": "BP 88/54 \u2014 hypotension",
+      "type": "exam",
+      "category": "severity",
+      "label": "BP 88/54 \u2014 hypotension",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "BP 88/54, HR 112, RR 22, SpO2 91% on room air",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "3510d672"
+      }
+    },
+    {
+      "t": 600,
+      "event": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Troponin I 4.8 ng/mL (markedly elevated)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ad5dbfa2"
+      }
+    },
+    {
+      "t": 600,
+      "event": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Creatinine 1.4 mg/dL",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "302371a2"
+      }
+    },
+    {
+      "t": 600,
+      "event": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "type": "exam",
+      "category": "severity",
+      "label": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "12-lead ECG shows ST elevation in leads II, III, aVF",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "bcd9f28a"
+      }
+    },
+    {
+      "t": 600,
+      "event": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Bedside echo: EF 30%, inferior wall hypokinesis",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "3564611a"
+      }
+    },
+    {
+      "t": 600,
+      "event": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Acute inferior STEMI, likely RCA occlusion",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "3589488b"
+      }
+    },
+    {
+      "t": 600,
+      "event": "cardiogenic shock \u2014 Killip class III",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "cardiogenic shock \u2014 Killip class III",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "complicated by cardiogenic shock (Killip class III)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "8b691c0c"
+      }
+    },
+    {
+      "t": 600,
+      "event": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Aspirin 325 mg chewed, ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "37acdc1a"
+      }
+    },
+    {
+      "t": 600,
+      "event": "Ticagrelor 180 mg \u2014 loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ticagrelor 180 mg \u2014 loading dose",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "546fc934"
+      }
+    },
+    {
+      "t": 600,
+      "event": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "heparin bolus 60 U/kg",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "e962d535"
+      }
+    },
+    {
+      "t": 600,
+      "event": "IV normal saline 500 mL \u2014 bolus",
+      "type": "treatment",
+      "category": "severity",
+      "label": "IV normal saline 500 mL \u2014 bolus",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "IV normal saline 500 mL bolus",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "e841fd8d"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "contrast allergy",
+      "type": "exam",
+      "category": "negated",
+      "label": "contrast allergy",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Patient denies any history of contrast allergy",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "1edbf06f"
+      }
+    },
+    {
+      "t": 0,
+      "event": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "type": "procedure",
+      "category": "critical",
+      "label": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "PCI to RCA with drug-eluting stent placement. Door-to-balloon time 68 minutes. TIMI 3 flow restored.",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "51819519"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Moderate mitral regurgitation \u2014 moderate, new",
+      "type": "exam",
+      "category": "severity",
+      "label": "Moderate mitral regurgitation \u2014 moderate, new",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Moderate mitral regurgitation noted (new)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ec449de4"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Atorvastatin 80 mg started",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "767beae0"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Metoprolol 12.5 mg initiated once BP tolerated",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "f09addbe"
+      }
+    },
+    {
+      "t": 172800,
+      "event": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Ramipril 2.5 mg started on day 2 with stable creatinine",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "6fcd57da"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "EF 35% \u2014 improving",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 35% \u2014 improving",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Repeat echo on day 3 showed EF 35% (improving)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "9fbc361b"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "type": "exam",
+      "category": "severity",
+      "label": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Patient ambulated 50m with assistance on day 3",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "fe051d00"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Discharged home \u2014 stable condition",
+      "type": "history",
+      "category": "discharge",
+      "label": "Discharged home \u2014 stable condition",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Discharged home on day 5 in stable condition",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "052f3887"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Cardiac rehab referral \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Cardiac rehab referral \u2014 outpatient",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Cardiac rehab referral placed",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "b65714ca"
+      }
+    },
+    {
+      "t": 600,
+      "event": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "_provenance": {
+        "source_section": "imaging",
+        "source_text": "Follow-up echo scheduled in 6 weeks",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "6e57e41f"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "type": "exam",
+      "category": "severity",
+      "label": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "presents to the ED with substernal chest pain radiating to the left arm and jaw",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "2d699ed3"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "hypertension",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "hypertension",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "with a history of hypertension",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "a8c4bcdc"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "type 2 diabetes mellitus \u2014 on metformin",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "type 2 diabetes mellitus \u2014 on metformin",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "type 2 diabetes mellitus (on metformin)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "dd8613d8"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "30 pack-year smoking history \u2014 30 pack-years",
+      "type": "exam",
+      "category": "severity",
+      "label": "30 pack-year smoking history \u2014 30 pack-years",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "30 pack-year smoking history",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "2bc6f71e"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "syncope",
+      "type": "exam",
+      "category": "negated",
+      "label": "syncope",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "He denies syncope or palpitations",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "1ff14766"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "MI \u2014 father, at age 62",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "MI \u2014 father, at age 62",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "father with MI at 62",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "b5926810"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "BP 88/54 \u2014 hypotension",
+      "type": "exam",
+      "category": "severity",
+      "label": "BP 88/54 \u2014 hypotension",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "BP 88/54, HR 112, RR 22, SpO2 91% on room air",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "a60491ec"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Troponin I 4.8 ng/mL (markedly elevated)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "f57dbbe2"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Creatinine 1.4 mg/dL",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "98b31049"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "type": "exam",
+      "category": "severity",
+      "label": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "12-lead ECG shows ST elevation in leads II, III, aVF",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "6a7c9ac4"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Bedside echo: EF 30%, inferior wall hypokinesis",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "c7b9ec0b"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Acute inferior STEMI, likely RCA occlusion",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "5195158d"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "cardiogenic shock \u2014 Killip class III",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "cardiogenic shock \u2014 Killip class III",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "complicated by cardiogenic shock (Killip class III)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "1702c9a6"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Aspirin 325 mg chewed, ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "e0121a4a"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "Ticagrelor 180 mg \u2014 loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ticagrelor 180 mg \u2014 loading dose",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "da0b1081"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "heparin bolus 60 U/kg",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "cd0bdc66"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "IV normal saline 500 mL \u2014 bolus",
+      "type": "treatment",
+      "category": "severity",
+      "label": "IV normal saline 500 mL \u2014 bolus",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "IV normal saline 500 mL bolus",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "a27a3d67"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "contrast allergy",
+      "type": "exam",
+      "category": "negated",
+      "label": "contrast allergy",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Patient denies any history of contrast allergy",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "c1d565a8"
+      }
+    },
+    {
+      "t": 0,
+      "event": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "type": "procedure",
+      "category": "critical",
+      "label": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "PCI to RCA with drug-eluting stent placement. Door-to-balloon time 68 minutes. TIMI 3 flow restored.",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "f0ac7cbf"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Moderate mitral regurgitation \u2014 moderate, new",
+      "type": "exam",
+      "category": "severity",
+      "label": "Moderate mitral regurgitation \u2014 moderate, new",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Moderate mitral regurgitation noted (new)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "84b731bd"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Atorvastatin 80 mg started",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "bfccdd41"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Metoprolol 12.5 mg initiated once BP tolerated",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "2ba76d1e"
+      }
+    },
+    {
+      "t": 172800,
+      "event": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Ramipril 2.5 mg started on day 2 with stable creatinine",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "f0e9bb61"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "EF 35% \u2014 improving",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 35% \u2014 improving",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Repeat echo on day 3 showed EF 35% (improving)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "0a6b5c97"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "type": "exam",
+      "category": "severity",
+      "label": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Patient ambulated 50m with assistance on day 3",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "dcb942e9"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Discharged home \u2014 stable condition",
+      "type": "history",
+      "category": "discharge",
+      "label": "Discharged home \u2014 stable condition",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Discharged home on day 5 in stable condition",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "53b3c66c"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Cardiac rehab referral \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Cardiac rehab referral \u2014 outpatient",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Cardiac rehab referral placed",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "429950df"
+      }
+    },
+    {
+      "t": 1800,
+      "event": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "_provenance": {
+        "source_section": "assessment",
+        "source_text": "Follow-up echo scheduled in 6 weeks",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "9381cce3"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "type": "exam",
+      "category": "severity",
+      "label": "substernal chest pain \u2014 radiating to left arm and jaw",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "presents to the ED with substernal chest pain radiating to the left arm and jaw",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "0d92f578"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "hypertension",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "hypertension",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "with a history of hypertension",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "abba24ac"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "type 2 diabetes mellitus \u2014 on metformin",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "type 2 diabetes mellitus \u2014 on metformin",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "type 2 diabetes mellitus (on metformin)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "bed01397"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "30 pack-year smoking history \u2014 30 pack-years",
+      "type": "exam",
+      "category": "severity",
+      "label": "30 pack-year smoking history \u2014 30 pack-years",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "30 pack-year smoking history",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "e674fc9d"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "syncope",
+      "type": "exam",
+      "category": "negated",
+      "label": "syncope",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "He denies syncope or palpitations",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "5dab7ded"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "MI \u2014 father, at age 62",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "MI \u2014 father, at age 62",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "father with MI at 62",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "7dacab3a"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "BP 88/54 \u2014 hypotension",
+      "type": "exam",
+      "category": "severity",
+      "label": "BP 88/54 \u2014 hypotension",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "BP 88/54, HR 112, RR 22, SpO2 91% on room air",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "37ed5222"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Troponin I 4.8 ng/mL \u2014 markedly elevated",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Troponin I 4.8 ng/mL (markedly elevated)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "8f74881e"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "type": "lab",
+      "category": "severity",
+      "label": "Creatinine 1.4 mg/dL \u2014 mildly elevated",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Creatinine 1.4 mg/dL",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d35f7de3"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "type": "exam",
+      "category": "severity",
+      "label": "ST elevation in leads II, III, aVF \u2014 inferior wall",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "12-lead ECG shows ST elevation in leads II, III, aVF",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ee04be93"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 30% \u2014 severely reduced, inferior wall hypokinesis",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Bedside echo: EF 30%, inferior wall hypokinesis",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "ac209a42"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "Acute inferior STEMI \u2014 likely RCA occlusion",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Acute inferior STEMI, likely RCA occlusion",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "d98bfd54"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "cardiogenic shock \u2014 Killip class III",
+      "type": "diagnosis",
+      "category": "severity",
+      "label": "cardiogenic shock \u2014 Killip class III",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "complicated by cardiogenic shock (Killip class III)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "f739aced"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Aspirin 325 mg \u2014 chewed, loading dose",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Aspirin 325 mg chewed, ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "2614fa53"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "Ticagrelor 180 mg \u2014 loading dose",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ticagrelor 180 mg \u2014 loading dose",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "ticagrelor 180 mg loading dose",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "9e56b286"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Heparin bolus 60 U/kg \u2014 anticoagulation",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "heparin bolus 60 U/kg",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "f2ba8a74"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "IV normal saline 500 mL \u2014 bolus",
+      "type": "treatment",
+      "category": "severity",
+      "label": "IV normal saline 500 mL \u2014 bolus",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "IV normal saline 500 mL bolus",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "c50b055b"
+      }
+    },
+    {
+      "t": -7200,
+      "event": "contrast allergy",
+      "type": "exam",
+      "category": "negated",
+      "label": "contrast allergy",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Patient denies any history of contrast allergy",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "17f1a1ed"
+      }
+    },
+    {
+      "t": 0,
+      "event": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "type": "procedure",
+      "category": "critical",
+      "label": "PCI to RCA \u2014 drug-eluting stent, door-to-balloon 68 min",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "PCI to RCA with drug-eluting stent placement. Door-to-balloon time 68 minutes. TIMI 3 flow restored.",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "6fb296dc"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Moderate mitral regurgitation \u2014 moderate, new",
+      "type": "exam",
+      "category": "severity",
+      "label": "Moderate mitral regurgitation \u2014 moderate, new",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Moderate mitral regurgitation noted (new)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "020bb7bd"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Atorvastatin 80 mg \u2014 high-intensity statin",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Atorvastatin 80 mg started",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "3c257148"
+      }
+    },
+    {
+      "t": 86400,
+      "event": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Metoprolol 12.5 mg \u2014 low dose, BP tolerated",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Metoprolol 12.5 mg initiated once BP tolerated",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "7f2419ce"
+      }
+    },
+    {
+      "t": 172800,
+      "event": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "type": "treatment",
+      "category": "severity",
+      "label": "Ramipril 2.5 mg \u2014 stable creatinine",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Ramipril 2.5 mg started on day 2 with stable creatinine",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "1ae1567e"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "EF 35% \u2014 improving",
+      "type": "exam",
+      "category": "severity",
+      "label": "EF 35% \u2014 improving",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Repeat echo on day 3 showed EF 35% (improving)",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "5ab5b149"
+      }
+    },
+    {
+      "t": 259200,
+      "event": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "type": "exam",
+      "category": "severity",
+      "label": "Patient ambulated 50m with assistance \u2014 with assistance",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Patient ambulated 50m with assistance on day 3",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "6c388a95"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Discharged home \u2014 stable condition",
+      "type": "history",
+      "category": "discharge",
+      "label": "Discharged home \u2014 stable condition",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Discharged home on day 5 in stable condition",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "cb0634b6"
+      }
+    },
+    {
+      "t": 432000,
+      "event": "Cardiac rehab referral \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Cardiac rehab referral \u2014 outpatient",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Cardiac rehab referral placed",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "870cd588"
+      }
+    },
+    {
+      "t": 3600,
+      "event": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "type": "procedure",
+      "category": "critical",
+      "label": "Follow-up echo in 6 weeks \u2014 outpatient",
+      "_provenance": {
+        "source_section": "plan",
+        "source_text": "Follow-up echo scheduled in 6 weeks",
+        "ontology_code": null,
+        "ontology_name": null,
+        "confidence": 1.0,
+        "trace_id": "3fe10a70"
+      }
+    }
+  ]
+}

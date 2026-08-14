@@ -1,0 +1,175 @@
+{
+  "id": "pa_pregnancy_bmj2025",
+  "title": "Pregnant patient with resistant hypertension and severe hypokalemia",
+  "specialty": "Internal Medicine / Endocrinology",
+  "difficulty": "Senior",
+  "estimated_min": 10,
+  "vignette": "A pregnant patient with hypertension is found to have severe hypokalemia. First-line management of the presumed underlying condition is limited in pregnancy because the standard drug of choice carries a fetal risk. Build your workup and management plan.",
+  "questions_for_student": [
+    "What secondary cause of hypertension should severe hypokalemia in pregnancy make you consider?",
+    "Why is spironolactone avoided in pregnancy, and what can be used instead?",
+    "If medical therapy fails, when in pregnancy is surgery safest?"
+  ],
+  "critical_steps": [
+    {
+      "label": "Serum potassium + basic metabolic panel",
+      "target_by": 120,
+      "done_at": null
+    },
+    {
+      "label": "Avoid spironolactone; consider eplerenone instead",
+      "target_by": 400,
+      "done_at": null
+    }
+  ],
+  "critical_node_labels": [
+    "Serum potassium + basic metabolic panel",
+    "Avoid spironolactone; consider eplerenone instead"
+  ],
+  "vitals_initial": {
+    "hr": 92,
+    "sbp": 158,
+    "dbp": 98,
+    "spo2": 98,
+    "rr": 16
+  },
+  "expert_nodes": [
+    {
+      "id": "n_001",
+      "type": "history",
+      "label": "Ask about pre-existing hypertension and prior pregnancies",
+      "rationale": "Chronic HTN + hypokalemia in pregnancy should raise suspicion for a secondary cause, not just gestational HTN",
+      "result": null,
+      "t_added": 0,
+      "t_resolved": null
+    },
+    {
+      "id": "n_002",
+      "type": "lab",
+      "label": "Serum potassium + basic metabolic panel",
+      "rationale": "Reveals severe hypokalemia, the key clue pointing away from routine gestational hypertension",
+      "result": null,
+      "t_added": 0,
+      "t_resolved": null
+    },
+    {
+      "id": "n_003",
+      "type": "lab",
+      "label": "Plasma aldosterone / renin ratio (adapted for pregnancy)",
+      "rationale": "Confirms primary aldosteronism despite pregnancy-related RAAS changes complicating interpretation",
+      "result": null,
+      "t_added": 0,
+      "t_resolved": null
+    },
+    {
+      "id": "n_004",
+      "type": "imaging",
+      "label": "Adrenal imaging (MRI preferred in pregnancy)",
+      "rationale": "Localizes the aldosterone-producing adenoma while avoiding ionizing radiation",
+      "result": null,
+      "t_added": 0,
+      "t_resolved": null
+    },
+    {
+      "id": "n_005",
+      "type": "decision",
+      "label": "Avoid spironolactone; consider eplerenone instead",
+      "rationale": "Spironolactone is contraindicated in pregnancy due to anti-androgenic effects on the fetus",
+      "result": null,
+      "t_added": 0,
+      "t_resolved": null
+    },
+    {
+      "id": "n_006",
+      "type": "treatment",
+      "label": "Start eplerenone as a short-term bridge",
+      "rationale": "Controls hypokalemia/hypertension medically while definitive treatment is planned",
+      "result": null,
+      "t_added": 0,
+      "t_resolved": null
+    },
+    {
+      "id": "n_007",
+      "type": "decision",
+      "label": "Reassess if refractory to medical therapy",
+      "rationale": "Determines whether surgery is needed before term",
+      "result": null,
+      "t_added": 0,
+      "t_resolved": null
+    },
+    {
+      "id": "n_008",
+      "type": "treatment",
+      "label": "Unilateral laparoscopic adrenalectomy in the second trimester",
+      "rationale": "Second trimester is the safest surgical window in pregnancy; addresses the source directly once medical therapy is insufficient",
+      "result": null,
+      "t_added": 0,
+      "t_resolved": null
+    },
+    {
+      "id": "n_009",
+      "type": "diagnosis",
+      "label": "Primary aldosteronism secondary to adrenal adenoma",
+      "rationale": "Working diagnosis established once biochemical and imaging findings converge",
+      "result": null,
+      "t_added": 0,
+      "t_resolved": null
+    }
+  ],
+  "expert_edges": [
+    {
+      "from": "n_001",
+      "to": "n_002"
+    },
+    {
+      "from": "n_002",
+      "to": "n_003"
+    },
+    {
+      "from": "n_003",
+      "to": "n_004"
+    },
+    {
+      "from": "n_004",
+      "to": "n_005"
+    },
+    {
+      "from": "n_005",
+      "to": "n_006"
+    },
+    {
+      "from": "n_006",
+      "to": "n_007"
+    },
+    {
+      "from": "n_007",
+      "to": "n_008"
+    },
+    {
+      "from": "n_008",
+      "to": "n_009"
+    }
+  ],
+  "case_source": {
+    "type": "published",
+    "origin": "BMJ Case Reports",
+    "deidentified": true,
+    "consent_note": "Published case report — de-identification and consent handled by the journal prior to publication",
+    "citation": {
+      "authors": "Lin A, Chan SJ, Crapanzano JP, Kuo EJ",
+      "title": "Severe hypokalaemia in primary aldosteronism during pregnancy",
+      "journal": "BMJ Case Reports",
+      "year": "2025",
+      "pmid": "39914873",
+      "doi": "10.1136/bcr-2024-262767",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39914873/"
+    }
+  },
+  "follow_up": {
+    "actual_path": "In the published case, eplerenone was used as a short-term bridge to control severe hypokalemia after spironolactone was ruled out due to pregnancy. When the patient remained refractory to medical management, a unilateral laparoscopic adrenalectomy was performed in the second trimester.",
+    "complications": "None reported to the fetus from eplerenone use, per the published abstract.",
+    "discharge_outcome": "Not detailed in the publicly available abstract — see full article for exact discharge status.",
+    "long_term": "Not detailed in the publicly available abstract — see full article for follow-up data.",
+    "teaching_pearl": "Severe hypokalemia in a hypertensive pregnant patient should not be assumed to be routine gestational hypertension — it's a red flag for a secondary cause like primary aldosteronism, and the standard first-line drug (spironolactone) is off the table in pregnancy."
+  }
+}

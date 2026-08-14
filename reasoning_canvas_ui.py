@@ -481,12 +481,12 @@ def render(sid: str):
 
         step_label = st.text_input(
             "What's your next step?",
-            key="rc_compose_label",
+            key="rc_compose_label_widget",
             placeholder="e.g. '12-lead ECG', 'Ask about chest pain onset', 'Start aspirin 325mg'",
         )
         step_rationale = st.text_input(
             "Why? (optional, 1 line)",
-            key="rc_compose_rationale",
+            key="rc_compose_rationale_widget",
             placeholder="e.g. 'Rule out STEMI before troponin returns'",
         )
 
@@ -520,8 +520,8 @@ def render(sid: str):
                 except ValueError:
                     pass
             st.session_state["rc_tree"] = tree
-            st.session_state["rc_compose_label"] = ""
-            st.session_state["rc_compose_rationale"] = ""
+            st.session_state["_compose_label"] = ""
+            st.session_state["_compose_rationale"] = ""
             st.rerun()
 
         # ── Finish button ───────────────────────────────────────────────────

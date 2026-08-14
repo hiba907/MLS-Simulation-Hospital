@@ -7,7 +7,7 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 STUDENTS_DIR = os.path.join(_SCRIPT_DIR, "hospital_data")
 os.makedirs(STUDENTS_DIR, exist_ok=True)
 
-DEPT_KEYS = ["ultrasound", "surgery", "fls", "ct", "endoscopy"]
+DEPT_KEYS = ["ultrasound", "surgery", "fls", "ct", "endoscopy", "reasoning"]
 
 
 def make_guest_id() -> str:
@@ -37,6 +37,8 @@ BADGE_RULES = [
     ("FLS Bronze",      "🥉", lambda s: s.get("best", {}).get("fls", 0) >= 70),
     ("FLS Silver",      "🥈", lambda s: s.get("best", {}).get("fls", 0) >= 85),
     ("Scope Navigator", "🔭", lambda s: s.get("best", {}).get("endoscopy", 0) >= 75),
+    ("Reasoner",        "🧠", lambda s: s.get("best", {}).get("reasoning", 0) >= 80),
+    ("Master Reasoner", "🎓", lambda s: s.get("best", {}).get("reasoning", 0) >= 95),
     ("Top Surgeon",     "🏆", _top_surgeon),
 ]
 

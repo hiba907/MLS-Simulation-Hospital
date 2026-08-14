@@ -34,8 +34,19 @@ TMP = tempfile.mkdtemp(prefix="mls_test_")
 os.environ["MLS_TEST_DIR"] = TMP
 
 
+def _has_streamlit():
+    try:
+        import streamlit  # noqa
+        return True
+    except ImportError:
+        return False
+
+
 @test("shared_session: register / save / load round-trip")
 def t_register():
+    if not _has_streamlit():
+        print("    (skipped: streamlit not installed)")
+        return
     import shared_session
     # Monkeypatch STUDENTS_DIR to isolated temp
     shared_session.STUDENTS_DIR = TMP
@@ -52,6 +63,9 @@ def t_register():
 
 @test("shared_session: record_session rejects unknown dept")
 def t_dept_whitelist():
+    if not _has_streamlit():
+        print("    (skipped: streamlit not installed)")
+        return
     import shared_session
     s = shared_session.register_student("Whitelist User")
     try:
@@ -64,6 +78,9 @@ def t_dept_whitelist():
 
 @test("shared_session: record_session accepts valid dept")
 def t_valid_dept():
+    if not _has_streamlit():
+        print("    (skipped: streamlit not installed)")
+        return
     import shared_session
     s = shared_session.register_student("Valid User")
     out = shared_session.record_session(s["id"], "ct", 85.0, "test")
@@ -74,6 +91,9 @@ def t_valid_dept():
 
 @test("shared_session: Top Surgeon badge requires all depts attempted")
 def t_top_surgeon():
+    if not _has_streamlit():
+        print("    (skipped: streamlit not installed)")
+        return
     import shared_session
     s = shared_session.register_student("Badge User")
     # Only do CT and ultrasound well — no others attempted
@@ -93,6 +113,9 @@ def t_top_surgeon():
 
 @test("shared_session: atomic write survives mid-write crash")
 def t_atomic_write():
+    if not _has_streamlit():
+        print("    (skipped: streamlit not installed)")
+        return
     import shared_session
     s = shared_session.register_student("Atomic User")
     # Verify the temp-file rename pattern is used (target has no .tmp leftover)
@@ -112,6 +135,9 @@ def t_atomic_write():
 # ── ct_hospital_module tests (volume generators + spacing helpers) ────────────
 @test("ct_hospital_module: synthetic volumes are correct shape & dtype")
 def t_vol_shapes():
+    if not _has_streamlit():
+        print("    (skipped: streamlit not installed)")
+        return
     import ct_hospital_module as ct
     for name, (fn, _) in ct.CASES.items():
         v = fn()
@@ -122,6 +148,9 @@ def t_vol_shapes():
 
 @test("ct_hospital_module: brain volume has expected HU ranges")
 def t_brain_hu():
+    if not _has_streamlit():
+        print("    (skipped: streamlit not installed)")
+        return
     import ct_hospital_module as ct
     v = ct._make_brain()
     # Background is -1000 (air); cortex 40, white matter 32, skull 1200, CSF 8
@@ -136,6 +165,9 @@ def t_brain_hu():
 
 @test("ct_hospital_module: kidney has all three layers")
 def t_kidney_layers():
+    if not _has_streamlit():
+        print("    (skipped: streamlit not installed)")
+        return
     import ct_hospital_module as ct
     v = ct._make_kidney()
     # New anatomical kidney: 35 (cortex), 25 (medulla), 5 (pelvis), -80 (fat), 10 (skin), 30 (soft tissue)
@@ -146,6 +178,9 @@ def t_kidney_layers():
 
 @test("ct_hospital_module: synthetic generation is fast (<2s per case)")
 def t_vol_speed():
+    if not _has_streamlit():
+        print("    (skipped: streamlit not installed)")
+        return
     import time
     import ct_hospital_module as ct
     for name, (fn, _) in ct.CASES.items():
@@ -157,6 +192,9 @@ def t_vol_speed():
 
 @test("ct_hospital_module: _extract_spacing handles missing tags")
 def t_spacing_fallback():
+    if not _has_streamlit():
+        print("    (skipped: streamlit not installed)")
+        return
     import ct_hospital_module as ct
     class FakeDS:
         pass
@@ -221,6 +259,119 @@ def t_schematic_renders():
         fig = suture_module.render_schematic(name)
         assert fig is not None, f"{name} returned no figure"
         plt.close(fig)
+
+
+# ── reasoning_canvas tests (the new department) ─────────────────────────────
+@test("reasoning_canvas: empty tree mutates correctly")
+def t_rc_empty_tree():
+    import reasoning_canvas as rc
+    t = rc.empty_tree()
+    assert t["nodes"] == []
+    assert t["edges"] == []
+    n1 = rc.add_node(t, "history", "Chest pain history")
+    n2 = rc.add_node(t, "exam",    "CV exam")
+    assert n1["id"] == "n_001"
+    assert n2["id"] == "n_002"
+    rc.add_edge(t, n1["id"], n2["id"])
+    assert len(t["edges"]) == 1
+    # Cycle detection
+    rc.add_edge(t, n2["id"], n1["id"])
+    try:
+        rc.topological_order(t)
+        assert False, "should have raised ValueError on cycle"
+    except ValueError:
+        pass
+
+
+@test("reasoning_canvas: scoring on perfect tree = ~100")
+def t_rc_perfect_score():
+    import reasoning_canvas as rc
+    case = rc.get_case("stemi_58m")
+    perfect = {
+        "nodes": [dict(n) for n in case["expert_tree"]["nodes"]],
+        "edges": [dict(e) for e in case["expert_tree"]["edges"]],
+    }
+    result = rc.score_tree(perfect, case["expert_tree"],
+                           case.get("critical_node_labels"))
+    assert result["total"] >= 95, f"Perfect tree should score ~100, got {result['total']}"
+
+
+@test("reasoning_canvas: scoring on bad tree = low")
+def t_rc_bad_score():
+    import reasoning_canvas as rc
+    case = rc.get_case("stemi_58m")
+    bad = rc.empty_tree()
+    rc.add_node(bad, "imaging", "ECG", "Check the heart", t_added=60)
+    rc.add_node(bad, "lab",     "CBC", "Routine labs", t_added=120)
+    rc.add_node(bad, "disposition", "Discharge home with PPI",
+                "Maybe GERD", t_added=600)
+    result = rc.score_tree(bad, case["expert_tree"],
+                           case.get("critical_node_labels"))
+    # Bad tree should score meaningfully below perfect
+    assert result["total"] < 70, f"Bad tree should score < 70, got {result['total']}"
+    # Should have missed at least one of the critical must-have steps
+    missed_lower = [m.lower() for m in result["diff"]["missed_labels"]]
+    assert any("aspirin" in m or "cath" in m or "PCI" in m for m in missed_lower), \
+        f"Should miss aspirin/cath-lab/PCI, got {result['diff']['missed_labels']}"
+
+
+@test("reasoning_canvas: VitalsSim deteriorates on missed critical step")
+def t_rc_vitals_deteriorate():
+    import reasoning_canvas as rc
+    sim = rc.VitalsSim(
+        initial={"hr": 108, "sbp": 92, "dbp": 60, "spo2": 94, "rr": 22},
+        critical_steps=[{"label": "ECG", "target_by": 120, "done_at": None}],
+    )
+    sbp_before = sim.snapshot()["sbp"]
+    for _ in range(200):  # simulate 200s of doing nothing
+        sim.tick(1.0)
+    # After 200s with missed ECG, vitals should have worsened
+    assert sim.snapshot()["sbp"] < sbp_before, \
+        f"Should deteriorate, SBP went {sbp_before} -> {sim.snapshot()['sbp']}"
+    assert sim.outcome() in ("crash", "deteriorated", "missed_critical_step"), \
+        f"Should be a bad outcome, got {sim.outcome()}"
+
+
+@test("shared_session: reasoning dept in DEPT_KEYS")
+def t_ss_reasoning_dept():
+    # Skip if streamlit not available
+    try:
+        import streamlit  # noqa
+    except ImportError:
+        print("    (skipped: streamlit not installed)")
+        return
+    import shared_session
+    assert "reasoning" in shared_session.DEPT_KEYS, \
+        f"reasoning should be in DEPT_KEYS, got {shared_session.DEPT_KEYS}"
+    # record_session should accept it
+    s = shared_session.register_student("Reasoning User")
+    out = shared_session.record_session(s["id"], "reasoning", 85.0, "test")
+    assert out["best"]["reasoning"] == 85.0
+    # Reasoner badge should be earned
+    assert "🧠Reasoner" in out["badges"], f"Should earn Reasoner badge: {out['badges']}"
+
+
+# ── elembic_pipeline tests (the v2 NER+L module) ─────────────────────────────
+@test("elembic_pipeline: section segmentation finds HPI")
+def t_eb_segment():
+    import elembic_pipeline as ep
+    note = "CHIEF COMPLAINT: chest pain.\n\nHPI: 58M with crushing pain.\n\nPLAN: aspirin."
+    sections = ep.segment_sections(note)
+    section_names = [s["section"] for s in sections]
+    assert "chief_complaint" in section_names
+    assert "hpi" in section_names
+    assert "plan" in section_names
+
+
+@test("elembic_pipeline: temporal anchor parses 'day N' and 'before admission'")
+def t_eb_anchor():
+    import datetime
+    import elembic_pipeline as ep
+    admit = datetime.date(2026, 1, 15)
+    assert ep.anchor_time("day 3", admit, admit) == 3 * 86400
+    assert ep.anchor_time("before admission", admit, admit) < 0
+    assert ep.anchor_time("ED arrival", admit, admit) == 0
+    assert ep.anchor_time("at discharge", admit, admit) == 5 * 86400
 
 
 # ── Run all ───────────────────────────────────────────────────────────────────

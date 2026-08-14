@@ -604,21 +604,21 @@ def render(student_id: str):
             max_z = max(1, nz - 1)
             z = st.slider("Axial slice", 0, max_z, min(max_z, nz // 2), key="ax")
             img = _scale_up_img(_slice_to_img(vol[z], wl, ww))
-            st.image(img, caption=f"Axial z={z}", use_column_width=True)
+            st.image(img, caption=f"Axial z={z}", use_container_width=True)
         with c2:
             max_y = max(1, ny - 1)
             y = st.slider("Coronal slice", 0, max_y, min(max_y, ny // 2), key="cor")
             img = _slice_to_img(vol[:, y, :], wl, ww)
             img = _apply_z_stretch(img, spacing[2] / spacing[0]) if spacing[0] else img
             img = _scale_up_img(img)
-            st.image(img, caption=f"Coronal y={y}", use_column_width=True)
+            st.image(img, caption=f"Coronal y={y}", use_container_width=True)
         with c3:
             max_x = max(1, nx - 1)
             x = st.slider("Sagittal slice", 0, max_x, min(max_x, nx // 2), key="sag")
             img = _slice_to_img(vol[:, :, x], wl, ww)
             img = _apply_z_stretch(img, spacing[2] / spacing[1]) if spacing[1] else img
             img = _scale_up_img(img)
-            st.image(img, caption=f"Sagittal x={x}", use_column_width=True)
+            st.image(img, caption=f"Sagittal x={x}", use_container_width=True)
             
         if st.button("💾 Save CT session", key="ct_save_mpr"):
             record_session(student_id, "ct", 75.0, f"MPR:{st.session_state.ct_label}")
@@ -729,7 +729,7 @@ def render(student_id: str):
 
         col_main, col_side = st.columns([3, 1])
         with col_main:
-            st.image(img, caption=slice_label, use_column_width=True)
+            st.image(img, caption=slice_label, use_container_width=True)
         with col_side:
             st.markdown(f"**Slice info**\n- **Axis:** {axis}\n- **Depth:** {depth} / {max_depth}\n- **Shape:** {sl.shape[0]} × {sl.shape[1]}\n- **Window:** {win_name2}\n- **W / L:** {ww2} / {wl2}\n- **Zoom:** {zoom:.2f}×\n- **Voxel:** {voxel_ml * 1000:.2f} mm³")
 
@@ -770,7 +770,7 @@ def render(student_id: str):
         overlay = np.array(base)
         overlay[mask] = [255, 140, 0]
         vol_ml_seg = float(mask.sum()) * voxel_ml
-        st.image(_scale_up_img(Image.fromarray(overlay)), caption=f"{preset} overlay — {vol_ml_seg:.2f} mL", use_column_width=True)
+        st.image(_scale_up_img(Image.fromarray(overlay)), caption=f"{preset} overlay — {vol_ml_seg:.2f} mL", use_container_width=True)
         st.metric("Segmented volume", f"{vol_ml_seg:.2f} mL")
         if st.button("💾 Save segmentation session", key="seg_save"):
             record_session(student_id, "ct", 80.0, f"Seg:{preset} vol:{vol_ml_seg:.2f}mL")

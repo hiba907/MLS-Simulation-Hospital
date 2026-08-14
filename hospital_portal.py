@@ -40,6 +40,7 @@ DEPTS = [
     ("fls",          "🧲","FLS Peg Transfer",     "Two-instrument handoff timing"),
     ("ct",           "🩻","CT Reading Room",      "Slice, segment & upload real DICOM"),
     ("endoscopy",    "🔭","Endoscopy Suite",      "Navigation, biopsy & retroflexion drills"),
+    ("reasoning",    "🧠","Reasoning Canvas",     "Build the diagnostic workup as a decision tree"),
     ("analytics",    "📊","Analytics Dashboard",  "Score charts, radar & leaderboard"),
     ("instructions", "📖","Instructions",         "Full setup guide & ArUco marker table"),
 ]
@@ -163,6 +164,14 @@ def _route(dept, sid):
         except Exception as _e:
             import traceback
             st.error(f"Endoscopy module error: {_e}")
+            st.code(traceback.format_exc())
+    elif dept == "reasoning":
+        try:
+            from reasoning_canvas_ui import render as r
+            r(sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"Reasoning Canvas module error: {_e}")
             st.code(traceback.format_exc())
     elif dept == "analytics":
         try:

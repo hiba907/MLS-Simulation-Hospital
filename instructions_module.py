@@ -5,9 +5,9 @@ from shared_session import dept_header
 def render(student_id: str):
     dept_header("Instructions & Setup Guide", "📖", student_id)
 
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
         "🚀 Quick Start", "🖨️ ArUco Markers", "🔊 Ultrasound",
-        "🔪 Surgery", "🪡 Suture Lab", "🩻 CT & DICOM"])
+        "🔪 Surgery", "🪡 Suture Lab", "🩻 CT & DICOM", "🧠 Reasoning Canvas"])
 
     # ── Quick Start ────────────────────────────────────────────────────────
     with tab1:
@@ -30,6 +30,7 @@ streamlit run hospital_portal.py
 | 🧲 FLS | Two-instrument peg transfer timing |
 | 🩻 CT | Slice / segment / upload real DICOM |
 | 🔭 Endoscopy | Scope navigation, biopsy, retroflexion |
+| 🧠 Reasoning Canvas | Build the diagnostic workup as a decision tree, see how it compares to the expert's |
 | 📊 Analytics | Your scores, charts, badges |
 | 🪡 Suture Lab | 8 common suture patterns with reference diagrams |
         """)
@@ -220,4 +221,58 @@ lungs, heart, kidneys, vessels, ribs, etc.) — not nested ellipsoids anymore.
 - **cancerimagingarchive.net** — thousands of anonymised cases
 - **radiopaedia.org/cases** — teaching cases
 - Always anonymise patient data before sharing with students
+        """)
+
+    # ── Reasoning Canvas ────────────────────────────────────────────────────
+    with tab7:
+        st.markdown(r"""
+## 🧠 Reasoning Canvas
+
+A clinical decision-tree module for residents and interns. Unlike Q-banks
+(UWorld, AMBOSS, Rx) or virtual patients (Aquifer, Body Interact, SIM-MAN),
+**you don't pick A/B/C/D — you draw the workup**.
+
+### How a case works
+
+1. You get a clinical vignette (HPI, PMH, vitals, exam) and a timer
+2. You add nodes to the canvas from the palette: ❓ history, 🩺 exam, 🧪 lab,
+   🩻 imaging, 🔀 decision, 💊 treatment, 📍 diagnosis, 🚪 disposition
+3. You connect them with arrows to show your reasoning pathway
+4. You write a 1-line justification for each step ("why?")
+5. When done, the **Reasoning X-Ray** shows you where your tree diverged from
+   the expert's: matched, missed, extra, and order issues
+
+### Scoring (0–100)
+
+| Component | Weight | What it measures |
+|---|---|---|
+| **Critical** | 50% | Did you include the must-have steps (e.g. aspirin, cath activation for STEMI)? |
+| **Order**    | 30% | Did you sequence them correctly per the expert's pathway? |
+| **Value**    | 20% | Penalty for shotgun (extra tests that weren't indicated) |
+
+### Built-in cases
+
+- ✅ **Mr. Khalil, 58M — Inferior STEMI** (full case with expert tree)
+- 📝 **Mrs. Habib, 65F — Fever and confusion** (stub — author needed)
+- 📝 **Sarah, 22F — Right lower quadrant pain** (stub — author needed)
+
+### Time pressure is real
+
+Each case has critical steps with time targets. Miss them past the target
+and the patient's vitals start to deteriorate. Aspirin at 4 minutes for a
+STEMI is too late — that's a real clinical signal, not a game mechanic.
+
+### How to add a new case
+
+Open the Reasoning Canvas lobby → click **"🩺 Leader: Author a case"** →
+enter the leader passphrase (`mls-leader-2026`) → fill in the form.
+
+**De-identification requirements for real cases:**
+- No patient name, MRN, or initials
+- No rare demographic combinations (e.g. 88-year-old with a specific genetic
+  condition from a specific town)
+- No identifying details in the vignette (specific dates, specific family
+  histories that would re-identify)
+- The attending who saw the case should review the case content before it's
+  used in teaching
         """)

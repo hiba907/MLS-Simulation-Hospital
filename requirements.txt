@@ -12,3 +12,11 @@ lungmask
 SimpleITK
 totalsegmentator
 nibabel
+
+# Reasoning Canvas + virtual patient (LLM-backed, no training)
+openai>=1.0
+sentence-transformers>=2.2
+anthropic>=0.18
+
+# Optional: for local LLMs (Ollama) — no pip install needed, just install Ollama
+# from https://ollama.com and pull a model: `ollama pull llama3.1:8b`

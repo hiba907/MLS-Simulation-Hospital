@@ -45,7 +45,7 @@ from reasoning_canvas import (
 from shared_session import (
     dept_header, load_student, save_student, record_session,
 )
-from reasoning_followup import UPDATE_TYPES  # for the follow-up authoring UI
+from reasoning_followup import UPDATE_TYPES, UPDATE_TYPE_LABELS  # for the follow-up authoring UI
 
 
 # ─────────────────────────────────────────────────────────────────────────────

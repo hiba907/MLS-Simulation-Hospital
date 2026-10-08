@@ -8,6 +8,7 @@ from shared_session import (
     make_guest_id, load_student,
     leaderboard_data, DEPT_KEYS
 )
+from sim_account import sb_available, render_login_box
 
 _CSS = """
 <style>
@@ -41,6 +42,10 @@ DEPTS = [
     ("ct",           "🩻","CT Reading Room",      "Slice, segment & upload real DICOM"),
     ("endoscopy",    "🔭","Endoscopy Suite",      "Navigation, biopsy & retroflexion drills"),
     ("reasoning",    "🧠","Reasoning Canvas",     "Build the diagnostic workup as a decision tree"),
+    ("pathology",    "🔬","Pathology Centre",     "Real microscope: pan, zoom & call the diagnosis"),
+    ("foley",        "🩺","Foley Catheterization", "9-step gesture-guided procedure + safety quiz"),
+    ("intubation",   "🫁","Endotracheal Intubation", "Full 3D OR room, orbit/zoom + airway sequence"),
+    ("endoscopy_scope", "🔭","Endoscopy (Upper & Lower)", "360° scope path + real-photo viewer"),
     ("analytics",    "📊","Analytics Dashboard",  "Score charts, radar & leaderboard"),
     ("instructions", "📖","Instructions",         "Full setup guide & ArUco marker table"),
 ]
@@ -65,16 +70,43 @@ def _landing():
         unsafe_allow_html=True,
     )
     st.markdown("---")
-    st.markdown("<div class='landing-btn'>", unsafe_allow_html=True)
-    if st.button("🚀 Enter Hospital", type="primary", use_container_width=True):
-        st.session_state.student_id   = make_guest_id()
-        st.session_state.student_name = "Guest"
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown(
-        "<p class='session-note'>No account needed. Your scores save to this browser tab only.</p>",
-        unsafe_allow_html=True,
-    )
+
+    if sb_available():
+        col_signin, col_guest = st.columns(2)
+        with col_signin:
+            st.markdown("##### 🔐 Sign in (saves your progress permanently)")
+            user = render_login_box()
+            if user:
+                st.session_state.student_id = user["email"]      # real persistent identity
+                st.session_state.student_name = user["name"]
+                st.session_state.signed_in = True
+                st.rerun()
+        with col_guest:
+            st.markdown("##### 👤 Or just try it out")
+            st.markdown("<div class='landing-btn'>", unsafe_allow_html=True)
+            if st.button("🚀 Continue as Guest", use_container_width=True):
+                st.session_state.student_id   = make_guest_id()
+                st.session_state.student_name = "Guest"
+                st.session_state.signed_in = False
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown(
+                "<p class='session-note'>No account needed — scores save to this browser "
+                "tab only and won't follow you to another device.</p>",
+                unsafe_allow_html=True,
+            )
+    else:
+        st.markdown("<div class='landing-btn'>", unsafe_allow_html=True)
+        if st.button("🚀 Enter Hospital", type="primary", use_container_width=True):
+            st.session_state.student_id   = make_guest_id()
+            st.session_state.student_name = "Guest"
+            st.session_state.signed_in = False
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown(
+            "<p class='session-note'>No account needed. Your scores save to this browser tab only.</p>",
+            unsafe_allow_html=True,
+        )
 
 
 def _lobby(sid, sname):
@@ -110,8 +142,18 @@ def _lobby(sid, sname):
                 st.rerun()
 
     st.markdown("---")
+    try:
+        virtual_hospital_url = st.secrets.get("VIRTUAL_HOSPITAL_URL", "")
+    except Exception:
+        virtual_hospital_url = ""
+    if virtual_hospital_url:
+        st.link_button("🏥 Go to Virtual Hospital", virtual_hospital_url, use_container_width=True)
+    else:
+        st.caption("🏥 Virtual Hospital link not configured yet — set `VIRTUAL_HOSPITAL_URL` "
+                   "in this app's secrets to show a button here.")
+
     if st.button("🔄 Start New Session", key="new_session"):
-        for k in ["student_id", "student_name", "dept"]:
+        for k in ["student_id", "student_name", "dept", "signed_in"]:
             st.session_state.pop(k, None)
         st.rerun()
 
@@ -172,6 +214,38 @@ def _route(dept, sid):
         except Exception as _e:
             import traceback
             st.error(f"Reasoning Canvas module error: {_e}")
+            st.code(traceback.format_exc())
+    elif dept == "pathology":
+        try:
+            from pathology_module import render as r
+            r(sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"Pathology Centre module error: {_e}")
+            st.code(traceback.format_exc())
+    elif dept == "foley":
+        try:
+            from foley_module import render as r
+            r(sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"Foley Catheterization module error: {_e}")
+            st.code(traceback.format_exc())
+    elif dept == "intubation":
+        try:
+            from intubation_module import render as r
+            r(sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"Intubation module error: {_e}")
+            st.code(traceback.format_exc())
+    elif dept == "endoscopy_scope":
+        try:
+            from endoscopy_scope_module import render as r
+            r(sid)
+        except Exception as _e:
+            import traceback
+            st.error(f"Endoscopy (Upper & Lower) module error: {_e}")
             st.code(traceback.format_exc())
     elif dept == "analytics":
         try:

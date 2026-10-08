@@ -7,7 +7,7 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 STUDENTS_DIR = os.path.join(_SCRIPT_DIR, "hospital_data")
 os.makedirs(STUDENTS_DIR, exist_ok=True)
 
-DEPT_KEYS = ["ultrasound", "surgery", "fls", "ct", "endoscopy", "reasoning"]
+DEPT_KEYS = ["ultrasound", "surgery", "fls", "ct", "endoscopy", "reasoning", "pathology", "foley", "intubation", "endoscopy_scope"]
 
 
 def make_guest_id() -> str:
@@ -39,6 +39,10 @@ BADGE_RULES = [
     ("Scope Navigator", "🔭", lambda s: s.get("best", {}).get("endoscopy", 0) >= 75),
     ("Reasoner",        "🧠", lambda s: s.get("best", {}).get("reasoning", 0) >= 80),
     ("Master Reasoner", "🎓", lambda s: s.get("best", {}).get("reasoning", 0) >= 95),
+    ("Pathologist",     "🔬", lambda s: s.get("best", {}).get("pathology", 0) >= 80),
+    ("Catheter Confident", "🩺", lambda s: s.get("best", {}).get("foley", 0) >= 80),
+    ("Airway Expert",   "🫁", lambda s: s.get("best", {}).get("intubation", 0) >= 80),
+    ("Scope Explorer",  "🔭", lambda s: s.get("best", {}).get("endoscopy_scope", 0) >= 80),
     ("Top Surgeon",     "🏆", _top_surgeon),
 ]
 
@@ -87,6 +91,35 @@ def load_student(sid: str) -> dict:
     """Load student, defensively filling in missing keys for older JSONs."""
     data = login_student(sid)
     if data is None:
+        # No local cache for this id yet. If it's a signed-in student (sid is
+        # their real email) and Supabase is configured, rebuild their record
+        # from the persisted vh_sim_sessions history instead of starting them
+        # over as a blank Guest — this is what makes progress survive a
+        # container restart/new device. Guests with no Supabase hit just
+        # get the normal blank record, same as before.
+        try:
+            if st.session_state.get("signed_in"):
+                from sim_account import get_sim_best_and_avg, get_sim_history
+                hist = get_sim_best_and_avg(sid, DEPT_KEYS)
+                data = _empty(st.session_state.get("student_name", "Student"))
+                data["id"] = sid
+                data["best"] = hist["best"]
+                data["avg"] = hist["avg"]
+                data["scores"] = hist["scores"]
+                data["total_sessions"] = hist["total_sessions"]
+                for row in get_sim_history(sid):
+                    data["sessions"].append({"dept": row.get("dept"), "score": row.get("score"),
+                                              "notes": row.get("notes", ""), "ts": row.get("created_at", "")})
+                for bname, icon, rule in BADGE_RULES:
+                    key = f"{icon}{bname}"
+                    try:
+                        if rule(data) and key not in data["badges"]:
+                            data["badges"].append(key)
+                    except Exception:
+                        pass
+                return data
+        except Exception:
+            pass
         return _empty("Guest")
     # Backfill any keys added in later versions
     data.setdefault("scores",  {k: [] for k in DEPT_KEYS})
@@ -165,6 +198,18 @@ def record_session(sid: str, dept: str, score: float, notes: str = "") -> dict:
         except Exception:
             pass
     save_student(data)
+
+    # If this is a signed-in student (sid is their real email, not a guest
+    # id), also mirror the score into Supabase so it survives across devices
+    # and sessions. Purely additive — guests and Supabase-unconfigured
+    # deployments are completely unaffected, local JSON above already ran.
+    try:
+        if st.session_state.get("signed_in"):
+            from sim_account import save_sim_session
+            save_sim_session(sid, dept, score, notes)
+    except Exception:
+        pass
+
     return data
 
 

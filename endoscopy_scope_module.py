@@ -48,9 +48,11 @@ photos are saved as base64-encoded JSON files under endoscopy_photos/.
 
 import base64
 import glob
+import io
 import json
 import os
 import time
+import zipfile
 
 import streamlit as st
 import streamlit.components.v1 as components
@@ -141,6 +143,48 @@ HYPERKVASIR_CLASS_HINT = {
     "ileocecal_valve": "ileum",
     "cecum":          "normal-cecum",
 }
+
+
+_ALL_LANDMARK_SCOPE = {l["key"]: "upper" for l in UPPER_LANDMARKS}
+_ALL_LANDMARK_SCOPE.update({l["key"]: "lower" for l in LOWER_LANDMARKS})
+_ALL_LANDMARK_TITLE = {l["key"]: l["title"] for l in UPPER_LANDMARKS + LOWER_LANDMARKS}
+
+
+def import_zip_bulk(zip_bytes: bytes) -> tuple:
+    """Open a leader-supplied ZIP and save every entry whose filename (minus
+    extension, lowercased) matches a landmark key (e.g. zline.jpg,
+    pylorus.jpg, cecum.jpg). Returns (matched, skipped) lists of filenames."""
+    matched, skipped = [], []
+    try:
+        zf = zipfile.ZipFile(io.BytesIO(zip_bytes))
+    except zipfile.BadZipFile:
+        return matched, ["(not a valid ZIP file)"]
+    for info in zf.infolist():
+        if info.is_dir():
+            continue
+        fname = os.path.basename(info.filename)
+        stem, ext = os.path.splitext(fname)
+        key = stem.strip().lower()
+        if ext.lower() not in (".jpg", ".jpeg", ".png"):
+            skipped.append(fname)
+            continue
+        if key not in _ALL_LANDMARK_SCOPE:
+            skipped.append(fname)
+            continue
+        data = zf.read(info)
+        if len(data) > 6 * 1024 * 1024:
+            skipped.append(f"{fname} (over 6MB)")
+            continue
+        b64 = base64.b64encode(data).decode()
+        photo_id = f"endo_{int(time.time()*1000)}_{key}"
+        save_photo({
+            "photo_id": photo_id, "scope_type": _ALL_LANDMARK_SCOPE[key], "landmark_key": key,
+            "name": _ALL_LANDMARK_TITLE[key],
+            "diagnosis_note": "HyperKvasir dataset (Simula Research Laboratory), CC BY 4.0 — Borgli et al. 2020",
+            "image_b64": b64,
+        })
+        matched.append(fname)
+    return matched, skipped
 
 
 def fetch_and_save_from_url(url: str, scope_type: str, landmark_key: str,
@@ -340,9 +384,26 @@ def render(student_id: str):
         html = build_or_room_html(_build_tract_js(key, idx), f"{scope_type} — {lm['title']}")
         components.html(html, height=500, scrolling=False)
     else:
-        photos = [p for p in list_photos(key) if p.get("landmark_key") == lm["key"]]
+        photos = sorted(
+            [p for p in list_photos(key) if p.get("landmark_key") == lm["key"]],
+            key=lambda p: (p.get("seq", 0), p.get("photo_id", "")),
+        )
         if photos:
-            row = photos[0]
+            frame_key = f"endo_frame_{key}_{lm['key']}"
+            fidx = st.session_state.get(frame_key, 0)
+            fidx = max(0, min(fidx, len(photos) - 1))
+            fcols = st.columns([1, 4, 1])
+            with fcols[0]:
+                if st.button("◀ Frame", disabled=fidx == 0, key=f"{frame_key}_prev"):
+                    st.session_state[frame_key] = max(0, fidx - 1)
+                    st.rerun()
+            with fcols[2]:
+                if st.button("Frame ▶", disabled=fidx == len(photos) - 1, key=f"{frame_key}_next"):
+                    st.session_state[frame_key] = min(len(photos) - 1, fidx + 1)
+                    st.rerun()
+            with fcols[1]:
+                st.progress((fidx + 1) / len(photos), text=f"Frame {fidx + 1} of {len(photos)} — real photo series")
+            row = photos[fidx]
             if row.get("diagnosis_note"):
                 st.caption(row["diagnosis_note"])
             html = _build_photo_viewer_html(row["image_b64"], False, row.get("name", lm["title"]))
@@ -355,6 +416,38 @@ def render(student_id: str):
 
     st.markdown(f"**{lm['title']}** — {lm['note']}")
     st.markdown("---")
+
+    with st.expander("📦 Leader: bulk-import a ZIP (whole series at once)"):
+        pw_bulk = st.text_input("Leader passphrase", type="password", key="endo_leader_pw_bulk")
+        if pw_bulk == LEADER_PASSPHRASE:
+            have = {p.get("landmark_key") for p in list_photos()}
+            all_lm = UPPER_LANDMARKS + LOWER_LANDMARKS
+            st.caption(
+                "Keys needed (filename, any image ext): " + ", ".join(
+                    f"✅ {l['key']}" if l["key"] in have else f"⬜ {l['key']}" for l in all_lm
+                )
+            )
+            st.markdown(
+                "Name each file after its landmark key — `zline.jpg`, `stomach_body.jpg`, "
+                "`pylorus.jpg`, `rectum.jpg`, `ileocecal_valve.jpg`, `cecum.jpg` are matched "
+                "automatically to HyperKvasir's classes (CC BY 4.0); `duodenal_bulb` / `sigmoid` "
+                "need your own image since HyperKvasir has no matching class. Pack them all into "
+                "one ZIP and the whole series updates in one step."
+            )
+            zfile = st.file_uploader("ZIP of photos", type=["zip"], key="endo_zip")
+            if st.button("📦 Import ZIP", key="endo_zip_import"):
+                if not zfile:
+                    st.error("Choose a ZIP file first.")
+                else:
+                    matched, skipped = import_zip_bulk(zfile.read())
+                    if matched:
+                        st.success(f"✅ Saved: {', '.join(matched)}")
+                    if skipped:
+                        st.warning(f"Skipped (name didn't match a landmark key, or not an image): {', '.join(skipped)}")
+                    if matched:
+                        st.rerun()
+        elif pw_bulk:
+            st.error("Wrong passphrase.")
 
     with st.expander("🩺 Leader: add a real photo for this landmark"):
         pw = st.text_input("Leader passphrase", type="password", key=f"endo_leader_pw_{key}")

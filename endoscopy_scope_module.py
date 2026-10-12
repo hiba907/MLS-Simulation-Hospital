@@ -466,6 +466,70 @@ def _render_findings(student_id: str):
             st.error("Wrong passphrase.")
 
 
+def _render_add_photo_expander(key: str, lm: dict):
+    """Leader panel: add/replace a real photo for one landmark. Pulled out
+    into its own function so both the Full Procedure series and the
+    per-landmark Anatomy Walkthrough can offer it without duplicating code."""
+    with st.expander(f"🩺 Leader: add a real photo for {lm['title']}"):
+        pw = st.text_input("Leader passphrase", type="password", key=f"endo_leader_pw_{key}_{lm['key']}")
+        if pw == LEADER_PASSPHRASE:
+            hint = HYPERKVASIR_CLASS_HINT.get(lm["key"])
+            if hint:
+                st.caption(
+                    f"💡 HyperKvasir (CC BY 4.0) class for this landmark: **{hint}**. "
+                    f"Browse it at https://osf.io/mh9sj or https://datasets.simula.no/hyper-kvasir, "
+                    f"copy a direct image link, and paste it below."
+                )
+            else:
+                st.caption("No matching HyperKvasir class for this landmark — upload your own image instead.")
+
+            src_mode = st.radio("Source", ["Upload a file", "Fetch from a URL"],
+                                 horizontal=True, key=f"endo_src_{key}_{lm['key']}")
+            name = st.text_input("Label", value=lm["title"], key=f"endo_upl_name_{key}_{lm['key']}")
+
+            if src_mode == "Upload a file":
+                uploaded = st.file_uploader("Photo (JPG/PNG) — must be an image you hold rights to",
+                                             type=["jpg", "jpeg", "png"], key=f"endo_upl_{key}_{lm['key']}")
+                diagnosis_note = st.text_input("Teaching note (optional)", key=f"endo_upl_note_{key}_{lm['key']}")
+                if st.button("💾 Save photo", key=f"endo_upl_save_{key}_{lm['key']}"):
+                    if not uploaded:
+                        st.error("Choose an image file first.")
+                    else:
+                        img_bytes = uploaded.read()
+                        if len(img_bytes) > 6 * 1024 * 1024:
+                            st.error("File too large (over 6MB).")
+                        else:
+                            b64 = base64.b64encode(img_bytes).decode()
+                            existing = [p for p in list_photos(key) if p.get("landmark_key") == lm["key"]]
+                            next_seq = (max((p.get("seq", 0) for p in existing), default=0) or 0) + 1
+                            photo_id = f"endo_{int(time.time()*1000)}_{lm['key']}_{next_seq:02d}"
+                            save_photo({
+                                "photo_id": photo_id, "scope_type": key, "landmark_key": lm["key"],
+                                "seq": next_seq,
+                                "name": name.strip(), "diagnosis_note": diagnosis_note.strip(),
+                                "image_b64": b64,
+                            })
+                            st.success("✅ Saved — it will appear in the photo series for this landmark.")
+                            st.rerun()
+            else:
+                url = st.text_input("Direct image URL", key=f"endo_url_{key}_{lm['key']}",
+                                     placeholder="https://.../normal-z-line/xxxxx.jpg")
+                source_note = st.text_input(
+                    "Attribution / teaching note",
+                    value=("HyperKvasir dataset (Simula Research Laboratory), CC BY 4.0 — Borgli et al. 2020"
+                           if hint else ""),
+                    key=f"endo_url_note_{key}_{lm['key']}")
+                if st.button("⬇️ Fetch & save", key=f"endo_url_save_{key}_{lm['key']}"):
+                    ok, msg = fetch_and_save_from_url(url, key, lm["key"], name, source_note)
+                    if ok:
+                        st.success("✅ Saved — it will appear in the photo series for this landmark.")
+                        st.rerun()
+                    else:
+                        st.error(msg)
+        elif pw:
+            st.error("Wrong passphrase.")
+
+
 def _flatten_exam_series(key: str) -> list:
     """One continuous list of (landmark_dict, photo_or_None) pairs covering
     every landmark of an exam in anatomical order, each landmark's own real
@@ -522,10 +586,10 @@ def _render_full_exam_series(scope_type: str, key: str, student_id: str):
 
     st.markdown(f"**{lm['title']}** — {lm['note']}")
     st.caption(
-        "This plays every landmark's real photos back to back in order. "
-        "Prefer to orbit a free 3D room, jump straight to one landmark, or "
-        "add a photo as the leader? Use '🧭 Anatomy Walkthrough (by landmark)' below."
+        "This plays every landmark's real photos back to back, in order. "
+        "Prefer to orbit a free 3D room instead? Use '🧭 Anatomy Walkthrough (by landmark)' below."
     )
+    _render_add_photo_expander(key, lm)
 
 
 def render(student_id: str):
@@ -654,61 +718,7 @@ def render(student_id: str):
         elif pw_bulk:
             st.error("Wrong passphrase.")
 
-    with st.expander("🩺 Leader: add a real photo for this landmark"):
-        pw = st.text_input("Leader passphrase", type="password", key=f"endo_leader_pw_{key}")
-        if pw == LEADER_PASSPHRASE:
-            hint = HYPERKVASIR_CLASS_HINT.get(lm["key"])
-            if hint:
-                st.caption(
-                    f"💡 HyperKvasir (CC BY 4.0) class for this landmark: **{hint}**. "
-                    f"Browse it at https://osf.io/mh9sj or https://datasets.simula.no/hyper-kvasir, "
-                    f"copy a direct image link, and paste it below."
-                )
-            else:
-                st.caption("No matching HyperKvasir class for this landmark — upload your own image instead.")
-
-            src_mode = st.radio("Source", ["Upload a file", "Fetch from a URL"],
-                                 horizontal=True, key=f"endo_src_{key}")
-            name = st.text_input("Label", value=lm["title"], key=f"endo_upl_name_{key}")
-
-            if src_mode == "Upload a file":
-                uploaded = st.file_uploader("Photo (JPG/PNG) — must be an image you hold rights to",
-                                             type=["jpg", "jpeg", "png"], key=f"endo_upl_{key}")
-                diagnosis_note = st.text_input("Teaching note (optional)", key=f"endo_upl_note_{key}")
-                if st.button("💾 Save photo", key=f"endo_upl_save_{key}"):
-                    if not uploaded:
-                        st.error("Choose an image file first.")
-                    else:
-                        img_bytes = uploaded.read()
-                        if len(img_bytes) > 6 * 1024 * 1024:
-                            st.error("File too large (over 6MB).")
-                        else:
-                            b64 = base64.b64encode(img_bytes).decode()
-                            photo_id = f"endo_{int(time.time()*1000)}"
-                            save_photo({
-                                "photo_id": photo_id, "scope_type": key, "landmark_key": lm["key"],
-                                "name": name.strip(), "diagnosis_note": diagnosis_note.strip(),
-                                "image_b64": b64,
-                            })
-                            st.success("✅ Saved — switch to the Real photo view to see it.")
-                            st.rerun()
-            else:
-                url = st.text_input("Direct image URL", key=f"endo_url_{key}",
-                                     placeholder="https://.../normal-z-line/xxxxx.jpg")
-                source_note = st.text_input(
-                    "Attribution / teaching note",
-                    value=("HyperKvasir dataset (Simula Research Laboratory), CC BY 4.0 — Borgli et al. 2020"
-                           if hint else ""),
-                    key=f"endo_url_note_{key}")
-                if st.button("⬇️ Fetch & save", key=f"endo_url_save_{key}"):
-                    ok, msg = fetch_and_save_from_url(url, key, lm["key"], name, source_note)
-                    if ok:
-                        st.success("✅ Saved — switch to the Real photo view to see it.")
-                        st.rerun()
-                    else:
-                        st.error(msg)
-        elif pw:
-            st.error("Wrong passphrase.")
+    _render_add_photo_expander(key, lm)
 
     if idx == len(landmarks) - 1:
         st.markdown("### 🧪 Landmark Quiz")

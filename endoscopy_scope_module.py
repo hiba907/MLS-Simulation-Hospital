@@ -79,6 +79,21 @@ LOWER_LANDMARKS = [
     {"key": "cecum", "title": "Cecum", "note": "The appendiceal orifice landmark confirms the scope reached the end of the colon."},
 ]
 
+UPPER_FINDINGS = [
+    {"key": "barretts", "title": "Barrett's Esophagus", "scope_type": "upper",
+     "note": "Columnar metaplasia replacing the distal esophageal squamous lining — salmon-colored mucosa extending above the GE junction. Premalignant; needs surveillance biopsies."},
+    {"key": "esophagitis_a", "title": "Esophagitis — Grade A (LA classification)", "scope_type": "upper",
+     "note": "One or more mucosal breaks ≤5mm, not extending between the tops of two mucosal folds — the mildest grade of reflux esophagitis."},
+    {"key": "esophagitis_b_d", "title": "Esophagitis — Grade B–D (LA classification)", "scope_type": "upper",
+     "note": "Grade B: breaks >5mm not bridging folds. Grades C–D: breaks that bridge folds, up to circumferential — higher-grade reflux esophagitis."},
+]
+LOWER_FINDINGS = [
+    {"key": "polyp", "title": "Colonic Polyp", "scope_type": "lower",
+     "note": "A raised or flat mucosal lesion — removed and sent for histology, since adenomatous polyps are precursors to colorectal cancer."},
+]
+ALL_FINDINGS = UPPER_FINDINGS + LOWER_FINDINGS
+_FINDING_BY_KEY = {f["key"]: f for f in ALL_FINDINGS}
+
 QUIZ = {
     "upper": [
         {"q": "Which landmark marks where esophageal and gastric mucosa meet?",
@@ -149,11 +164,30 @@ _ALL_LANDMARK_SCOPE = {l["key"]: "upper" for l in UPPER_LANDMARKS}
 _ALL_LANDMARK_SCOPE.update({l["key"]: "lower" for l in LOWER_LANDMARKS})
 _ALL_LANDMARK_TITLE = {l["key"]: l["title"] for l in UPPER_LANDMARKS + LOWER_LANDMARKS}
 
+# Finding keys use a distinct namespace from landmark keys (e.g. "barretts" vs
+# "zline") so they can share the same storage/frame-stepper machinery without
+# ever colliding. A finding photo's `seq` ordering is how the "normal, then
+# the abnormality, then back to normal" video-like feel is achieved — it's a
+# property of how a leader numbers the files on import, not separate code.
+_ALL_FINDING_SCOPE = {f["key"]: f["scope_type"] for f in ALL_FINDINGS}
+_ALL_FINDING_TITLE = {f["key"]: f["title"] for f in ALL_FINDINGS}
+# One combined map used by bulk ZIP import so a single ZIP can carry both
+# landmark photos and finding-series photos together.
+_ALL_KEYS_SCOPE = {**_ALL_LANDMARK_SCOPE, **_ALL_FINDING_SCOPE}
+_ALL_KEYS_TITLE = {**_ALL_LANDMARK_TITLE, **_ALL_FINDING_TITLE}
+
+
+import re as _re
+
 
 def import_zip_bulk(zip_bytes: bytes) -> tuple:
     """Open a leader-supplied ZIP and save every entry whose filename (minus
     extension, lowercased) matches a landmark key (e.g. zline.jpg,
-    pylorus.jpg, cecum.jpg). Returns (matched, skipped) lists of filenames."""
+    pylorus.jpg, cecum.jpg) OR a finding key with an optional sequence
+    suffix (e.g. barretts.jpg for a single photo, or barretts_01.jpg,
+    barretts_02.jpg, barretts_03.jpg for a normal→abnormal→normal series —
+    the leader orders frames by numbering the files; lower numbers play
+    first). Returns (matched, skipped) lists of filenames."""
     matched, skipped = [], []
     try:
         zf = zipfile.ZipFile(io.BytesIO(zip_bytes))
@@ -164,11 +198,20 @@ def import_zip_bulk(zip_bytes: bytes) -> tuple:
             continue
         fname = os.path.basename(info.filename)
         stem, ext = os.path.splitext(fname)
-        key = stem.strip().lower()
+        stem = stem.strip().lower()
         if ext.lower() not in (".jpg", ".jpeg", ".png"):
             skipped.append(fname)
             continue
-        if key not in _ALL_LANDMARK_SCOPE:
+
+        key, seq = stem, 0
+        m = _re.match(r"^(.*)_(\d+)$", stem)
+        if m and m.group(1) in _ALL_KEYS_SCOPE:
+            key, seq = m.group(1), int(m.group(2))
+        elif stem not in _ALL_KEYS_SCOPE:
+            skipped.append(fname)
+            continue
+
+        if key not in _ALL_KEYS_SCOPE:
             skipped.append(fname)
             continue
         data = zf.read(info)
@@ -176,14 +219,16 @@ def import_zip_bulk(zip_bytes: bytes) -> tuple:
             skipped.append(f"{fname} (over 6MB)")
             continue
         b64 = base64.b64encode(data).decode()
-        photo_id = f"endo_{int(time.time()*1000)}_{key}"
+        photo_id = f"endo_{int(time.time()*1000)}_{key}_{seq:02d}"
         save_photo({
-            "photo_id": photo_id, "scope_type": _ALL_LANDMARK_SCOPE[key], "landmark_key": key,
-            "name": _ALL_LANDMARK_TITLE[key],
+            "photo_id": photo_id, "scope_type": _ALL_KEYS_SCOPE[key], "landmark_key": key,
+            "seq": seq,
+            "name": _ALL_KEYS_TITLE[key],
             "diagnosis_note": "HyperKvasir dataset (Simula Research Laboratory), CC BY 4.0 — Borgli et al. 2020",
             "image_b64": b64,
         })
         matched.append(fname)
+        time.sleep(0.001)
     return matched, skipped
 
 
@@ -341,6 +386,86 @@ patientDetail.add(scopeBody);
 """
 
 
+def _render_photo_frame_series(photos: list, frame_key: str, fallback_label: str):
+    """Shared frame-stepper viewer: plays a sorted list of real photos like a
+    short clip (◀ Frame / Frame ▶), used for both landmark walkthroughs and
+    finding case series. Falls back to a labeled placeholder if empty."""
+    if photos:
+        fidx = st.session_state.get(frame_key, 0)
+        fidx = max(0, min(fidx, len(photos) - 1))
+        fcols = st.columns([1, 4, 1])
+        with fcols[0]:
+            if st.button("◀ Frame", disabled=fidx == 0, key=f"{frame_key}_prev"):
+                st.session_state[frame_key] = max(0, fidx - 1)
+                st.rerun()
+        with fcols[2]:
+            if st.button("Frame ▶", disabled=fidx == len(photos) - 1, key=f"{frame_key}_next"):
+                st.session_state[frame_key] = min(len(photos) - 1, fidx + 1)
+                st.rerun()
+        with fcols[1]:
+            st.progress((fidx + 1) / len(photos), text=f"Frame {fidx + 1} of {len(photos)} — real photo series")
+        row = photos[fidx]
+        if row.get("diagnosis_note"):
+            st.caption(row["diagnosis_note"])
+        html = _build_photo_viewer_html(row["image_b64"], False, row.get("name", fallback_label))
+        components.html(html, height=460, scrolling=False)
+    else:
+        st.info("No real photo uploaded yet — showing a labeled placeholder.")
+        b64 = _placeholder_svg_b64(fallback_label)
+        html = _build_photo_viewer_html(b64, True, "Placeholder — not real tissue")
+        components.html(html, height=460, scrolling=False)
+
+
+def _render_findings(student_id: str):
+    st.caption(
+        "Each case plays as a short real-photo series: normal tissue first, then the "
+        "abnormal finding, then back to normal — the way it looks scrolling through an "
+        "actual procedure. Order is set by the leader when photos are uploaded (frame 1, "
+        "frame 2, …)."
+    )
+    gi_type = st.radio("GI tract", ["Upper GI", "Lower GI"], horizontal=True, key="endo_finding_gi")
+    findings = UPPER_FINDINGS if gi_type == "Upper GI" else LOWER_FINDINGS
+    if not findings:
+        st.info("No case findings added for this tract yet.")
+        return
+
+    titles = [f["title"] for f in findings]
+    sel_title = st.selectbox("Case", titles, key="endo_finding_sel")
+    finding = next(f for f in findings if f["title"] == sel_title)
+
+    photos = sorted(
+        [p for p in list_photos() if p.get("landmark_key") == finding["key"]],
+        key=lambda p: (p.get("seq", 0), p.get("photo_id", "")),
+    )
+    _render_photo_frame_series(photos, f"endo_finding_frame_{finding['key']}", finding["title"])
+    st.markdown(f"**{finding['title']}** — {finding['note']}")
+    st.markdown("---")
+
+    with st.expander("🔬 Leader: bulk-import a ZIP for this case (whole series at once)"):
+        pw_bulk = st.text_input("Leader passphrase", type="password", key=f"endo_finding_pw_{finding['key']}")
+        if pw_bulk == LEADER_PASSPHRASE:
+            st.caption(
+                f"Name files `{finding['key']}_01.jpg`, `{finding['key']}_02.jpg`, "
+                f"`{finding['key']}_03.jpg` … in the order you want them to play "
+                f"(e.g. 01–02 normal, 03–04 the abnormality, 05 back to normal). "
+                f"Pack the whole case into one ZIP — the series updates in one step."
+            )
+            zfile = st.file_uploader("ZIP of photos for this case", type=["zip"], key=f"endo_finding_zip_{finding['key']}")
+            if st.button("📦 Import ZIP", key=f"endo_finding_zip_import_{finding['key']}"):
+                if not zfile:
+                    st.error("Choose a ZIP file first.")
+                else:
+                    matched, skipped = import_zip_bulk(zfile.read())
+                    if matched:
+                        st.success(f"✅ Saved: {', '.join(matched)}")
+                    if skipped:
+                        st.warning(f"Skipped (name didn't match a case/landmark key, or not an image): {', '.join(skipped)}")
+                    if matched:
+                        st.rerun()
+        elif pw_bulk:
+            st.error("Wrong passphrase.")
+
+
 def render(student_id: str):
     dept_header("Endoscopy (Upper & Lower)", "🔭", student_id)
     st.info("🔒 **Teaching simulation — follow local protocol.** Full 3D room: orbit, zoom "
@@ -357,6 +482,13 @@ def render(student_id: str):
             "couldn't confirm its license permits redistribution here, so nothing from it "
             "is included. Photos only appear if your leader uploads images they hold rights to."
         )
+
+    section = st.radio("Section", ["🧭 Anatomy Walkthrough", "🔬 Case Findings"],
+                        horizontal=True, key="endo_section")
+
+    if section.startswith("🔬"):
+        _render_findings(student_id)
+        return
 
     scope_type = st.radio("Exam type", ["Upper GI (EGD)", "Lower GI (Colonoscopy)"],
                            horizontal=True, key="endo_scope_type")

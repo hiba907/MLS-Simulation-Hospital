@@ -313,6 +313,7 @@ const stage = document.getElementById('stage');
 const img = document.getElementById('img');
 let scale = 1, panX = 0, panY = 0, dragging = false, lastX = 0, lastY = 0;
 function apply() {{ img.style.transform = 'translate(-50%,-50%) translate(' + panX + 'px,' + panY + 'px) scale(' + scale + ')'; }}
+apply(); // center the image on load — without this it never gets its initial transform and shows as blank/black until the user drags or zooms
 stage.addEventListener('mousedown', e => {{ dragging = true; lastX = e.clientX; lastY = e.clientY; stage.classList.add('dragging'); }});
 window.addEventListener('mouseup', () => {{ dragging = false; stage.classList.remove('dragging'); }});
 window.addEventListener('mousemove', e => {{
@@ -609,6 +610,16 @@ def render(student_id: str):
             "is included. Photos only appear if your leader uploads images they hold rights to."
         )
 
+    # A button below (e.g. "Take the landmark quiz") can't write directly into
+    # st.session_state["endo_section"] after the radio below is created this
+    # run — Streamlit raises StreamlitWidgetAlreadyInstantiatedError. So a
+    # button instead stashes the desired tab in "_endo_section_jump" and
+    # reruns; this applies it BEFORE the radio widget exists for the run,
+    # which is allowed.
+    pending = st.session_state.pop("_endo_section_jump", None)
+    if pending:
+        st.session_state["endo_section"] = pending
+
     section = st.radio(
         "Section",
         ["📽️ Full Procedure (play all photos in order)", "🧭 Anatomy Walkthrough (by landmark)", "🔬 Case Findings"],
@@ -627,7 +638,7 @@ def render(student_id: str):
     if section.startswith("📽️"):
         _render_full_exam_series(scope_type, key, student_id)
         if st.button("🧪 Take the landmark quiz", key=f"endo_fullseries_quiz_btn_{key}"):
-            st.session_state["endo_section"] = "🧭 Anatomy Walkthrough (by landmark)"
+            st.session_state["_endo_section_jump"] = "🧭 Anatomy Walkthrough (by landmark)"
             st.session_state[f"endo_{key}_idx"] = len(landmarks) - 1
             st.rerun()
         return

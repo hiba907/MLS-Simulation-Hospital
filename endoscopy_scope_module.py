@@ -293,6 +293,7 @@ def _build_photo_viewer_html(image_b64: str, is_svg: bool, label: str) -> str:
 <html><head><meta charset="UTF-8">
 <style>
 *{{margin:0;padding:0;box-sizing:border-box}}
+html,body{{height:100%}}
 body{{background:#0d1117;overflow:hidden}}
 #stage{{position:relative;width:100%;height:100%;overflow:hidden;cursor:grab;background:#000}}
 #stage.dragging{{cursor:grabbing}}

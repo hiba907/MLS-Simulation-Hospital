@@ -466,6 +466,68 @@ def _render_findings(student_id: str):
             st.error("Wrong passphrase.")
 
 
+def _flatten_exam_series(key: str) -> list:
+    """One continuous list of (landmark_dict, photo_or_None) pairs covering
+    every landmark of an exam in anatomical order, each landmark's own real
+    photos in seq order. A landmark with no photo yet contributes a single
+    `photo=None` placeholder entry so the series still passes through every
+    landmark, instead of silently skipping it."""
+    landmarks = UPPER_LANDMARKS if key == "upper" else LOWER_LANDMARKS
+    out = []
+    for lm in landmarks:
+        photos = sorted(
+            [p for p in list_photos(key) if p.get("landmark_key") == lm["key"]],
+            key=lambda p: (p.get("seq", 0), p.get("photo_id", "")),
+        )
+        if photos:
+            for p in photos:
+                out.append((lm, p))
+        else:
+            out.append((lm, None))
+    return out
+
+
+def _render_full_exam_series(scope_type: str, key: str, student_id: str):
+    """Press 'Upper GI' or 'Lower GI' and immediately see every landmark's
+    real photos play one after another as a single series — no separate
+    per-landmark 'switch to Real photo view' step needed."""
+    series = _flatten_exam_series(key)
+    total = len(series)
+    frame_key = f"endo_fullseries_{key}"
+    fidx = st.session_state.get(frame_key, 0)
+    fidx = max(0, min(fidx, total - 1))
+    lm, photo = series[fidx]
+
+    cols = st.columns([1, 4, 1])
+    with cols[0]:
+        if st.button("⬅ Prev", disabled=fidx == 0, key=f"{frame_key}_prev"):
+            st.session_state[frame_key] = max(0, fidx - 1)
+            st.rerun()
+    with cols[2]:
+        if st.button("Next ➡", disabled=fidx == total - 1, key=f"{frame_key}_next"):
+            st.session_state[frame_key] = min(total - 1, fidx + 1)
+            st.rerun()
+    with cols[1]:
+        st.progress((fidx + 1) / total, text=f"Frame {fidx + 1} of {total} — {lm['title']}")
+
+    if photo:
+        if photo.get("diagnosis_note"):
+            st.caption(photo["diagnosis_note"])
+        html = _build_photo_viewer_html(photo["image_b64"], False, photo.get("name", lm["title"]))
+    else:
+        st.info(f"No real photo uploaded yet for **{lm['title']}** — showing a labeled placeholder.")
+        b64 = _placeholder_svg_b64(lm["title"])
+        html = _build_photo_viewer_html(b64, True, "Placeholder — not real tissue")
+    components.html(html, height=460, scrolling=False)
+
+    st.markdown(f"**{lm['title']}** — {lm['note']}")
+    st.caption(
+        "This plays every landmark's real photos back to back in order. "
+        "Prefer to orbit a free 3D room, jump straight to one landmark, or "
+        "add a photo as the leader? Use '🧭 Anatomy Walkthrough (by landmark)' below."
+    )
+
+
 def render(student_id: str):
     dept_header("Endoscopy (Upper & Lower)", "🔭", student_id)
     st.info("🔒 **Teaching simulation — follow local protocol.** Full 3D room: orbit, zoom "
@@ -483,8 +545,11 @@ def render(student_id: str):
             "is included. Photos only appear if your leader uploads images they hold rights to."
         )
 
-    section = st.radio("Section", ["🧭 Anatomy Walkthrough", "🔬 Case Findings"],
-                        horizontal=True, key="endo_section")
+    section = st.radio(
+        "Section",
+        ["📽️ Full Procedure (play all photos in order)", "🧭 Anatomy Walkthrough (by landmark)", "🔬 Case Findings"],
+        horizontal=True, key="endo_section",
+    )
 
     if section.startswith("🔬"):
         _render_findings(student_id)
@@ -494,6 +559,14 @@ def render(student_id: str):
                            horizontal=True, key="endo_scope_type")
     key = "upper" if scope_type.startswith("Upper") else "lower"
     landmarks = UPPER_LANDMARKS if key == "upper" else LOWER_LANDMARKS
+
+    if section.startswith("📽️"):
+        _render_full_exam_series(scope_type, key, student_id)
+        if st.button("🧪 Take the landmark quiz", key=f"endo_fullseries_quiz_btn_{key}"):
+            st.session_state["endo_section"] = "🧭 Anatomy Walkthrough (by landmark)"
+            st.session_state[f"endo_{key}_idx"] = len(landmarks) - 1
+            st.rerun()
+        return
 
     idx = st.session_state.get(f"endo_{key}_idx", 0)
     cols = st.columns([1, 4, 1])

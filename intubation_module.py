@@ -22,11 +22,211 @@ Purely additive: new file only, plus 2 lines in hospital_portal.py and
 foley_module.py).
 """
 
+import base64
+import glob
+import io
+import json
+import os
+import re
+import time
+import zipfile
+
 import streamlit as st
 import streamlit.components.v1 as components
 
 from shared_session import dept_header, record_session
 from or_room_scene import build_or_room_html
+from endoscopy_scope_module import (
+    LEADER_PASSPHRASE, _build_photo_viewer_html, _placeholder_svg_b64,
+)
+
+# ── Real photo series ────────────────────────────────────────────────────
+# Same mechanism as the endoscopy photo series: each photo is one small JSON
+# file in intubation_photos/ (committed to the repo, so it survives restarts)
+# with a `stage` and a `seq`. The viewer plays every stage in order, each
+# stage's frames in seq order, as one continuous Prev/Next series.
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PHOTOS_DIR = os.path.join(_SCRIPT_DIR, "intubation_photos")
+os.makedirs(PHOTOS_DIR, exist_ok=True)
+
+PHOTO_STAGES = [
+    {"key": "mouth_opening", "title": "Mouth opening & head position",
+     "note": "Sniffing position, mouth open, ready to introduce the blade."},
+    {"key": "blade_insertion", "title": "Blade insertion & tongue sweep",
+     "note": "Blade enters along the right side of the tongue and sweeps it left."},
+    {"key": "cords_visualized", "title": "Vocal cords visualized",
+     "note": "Direct view of the glottis — cords, arytenoids and epiglottis identified before the tube moves."},
+    {"key": "tube_passed", "title": "Tube passing through the cords",
+     "note": "The ET tube is advanced under direct vision until the cuff is just past the cords."},
+    {"key": "placement_confirmed", "title": "Placement confirmed",
+     "note": "Cuff inflated, capnography waveform, tube depth noted and secured."},
+]
+_STAGE_BY_KEY = {st_["key"]: st_ for st_ in PHOTO_STAGES}
+
+
+def _photo_path(photo_id: str) -> str:
+    return os.path.join(PHOTOS_DIR, f"{photo_id}.json")
+
+
+def save_photo(row: dict):
+    tmp = _photo_path(row["photo_id"]) + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(row, f)
+    os.replace(tmp, _photo_path(row["photo_id"]))
+
+
+def list_photos(stage_key: str = None) -> list:
+    out = []
+    for p in sorted(glob.glob(os.path.join(PHOTOS_DIR, "*.json"))):
+        try:
+            with open(p) as f:
+                row = json.load(f)
+        except (json.JSONDecodeError, OSError):
+            continue
+        if stage_key is None or row.get("stage") == stage_key:
+            out.append(row)
+    return sorted(out, key=lambda r: (r.get("seq", 0), r.get("photo_id", "")))
+
+
+def _shrink_to_jpeg_b64(data: bytes, target_w: int = 900) -> str:
+    """Resize to ~900px wide and re-encode as JPEG so many frames stay small.
+    Falls back to the raw bytes if Pillow can't read the file."""
+    try:
+        from PIL import Image
+        img = Image.open(io.BytesIO(data)).convert("RGB")
+        if img.width > target_w:
+            img = img.resize((target_w, int(img.height * target_w / img.width)), Image.LANCZOS)
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=82)
+        return base64.b64encode(buf.getvalue()).decode()
+    except Exception:
+        return base64.b64encode(data).decode()
+
+
+def _next_seq(stage_key: str) -> int:
+    return max((p.get("seq", 0) for p in list_photos(stage_key)), default=0) + 1
+
+
+def import_zip_bulk(zip_bytes: bytes) -> tuple:
+    """ZIP of images named `<stage_key>_<NN>.jpg` (e.g. cords_visualized_01.jpg,
+    cords_visualized_02.jpg). Lower NN plays first. Returns (matched, skipped)."""
+    matched, skipped = [], []
+    try:
+        zf = zipfile.ZipFile(io.BytesIO(zip_bytes))
+    except zipfile.BadZipFile:
+        return matched, ["(not a valid ZIP file)"]
+    for info in zf.infolist():
+        if info.is_dir():
+            continue
+        fname = os.path.basename(info.filename)
+        stem, ext = os.path.splitext(fname)
+        stem = stem.strip().lower()
+        if ext.lower() not in (".jpg", ".jpeg", ".png"):
+            skipped.append(fname)
+            continue
+        m = re.match(r"^(.*?)_(\d+)$", stem)
+        key, seq = (m.group(1), int(m.group(2))) if m else (stem, 0)
+        if key not in _STAGE_BY_KEY:
+            skipped.append(fname)
+            continue
+        data = zf.read(info)
+        if len(data) > 12 * 1024 * 1024:
+            skipped.append(f"{fname} (over 12MB)")
+            continue
+        if seq == 0:
+            seq = _next_seq(key)
+        save_photo({
+            "photo_id": f"intub_{int(time.time()*1000)}_{key}_{seq:02d}",
+            "stage": key, "seq": seq,
+            "name": _STAGE_BY_KEY[key]["title"],
+            "diagnosis_note": "Real intubation photo provided by course leader.",
+            "image_b64": _shrink_to_jpeg_b64(data),
+        })
+        matched.append(fname)
+        time.sleep(0.002)
+    return matched, skipped
+
+
+def _flatten_series() -> list:
+    out = []
+    for stage in PHOTO_STAGES:
+        photos = list_photos(stage["key"])
+        if photos:
+            out.extend((stage, p) for p in photos)
+        else:
+            out.append((stage, None))
+    return out
+
+
+def _render_photo_series():
+    series = _flatten_series()
+    total = len(series)
+    frame_key = "intub_photo_frame"
+    fidx = max(0, min(st.session_state.get(frame_key, 0), total - 1))
+    stage, photo = series[fidx]
+
+    cols = st.columns([1, 4, 1])
+    with cols[0]:
+        if st.button("◀ Frame", disabled=fidx == 0, key="intub_frame_prev"):
+            st.session_state[frame_key] = fidx - 1
+            st.rerun()
+    with cols[2]:
+        if st.button("Frame ▶", disabled=fidx == total - 1, key="intub_frame_next"):
+            st.session_state[frame_key] = fidx + 1
+            st.rerun()
+    with cols[1]:
+        st.progress((fidx + 1) / total, text=f"Frame {fidx + 1} of {total} — {stage['title']}")
+
+    if photo:
+        if photo.get("diagnosis_note"):
+            st.caption(photo["diagnosis_note"])
+        html = _build_photo_viewer_html(photo["image_b64"], False, photo.get("name", stage["title"]))
+    else:
+        st.info(f"No real photo added yet for **{stage['title']}** — showing a labeled placeholder.")
+        html = _build_photo_viewer_html(_placeholder_svg_b64(stage["title"]), True,
+                                         "Placeholder — not a real photo")
+    components.html(html, height=460, scrolling=False)
+    st.markdown(f"**{stage['title']}** — {stage['note']}")
+
+    with st.expander("🩺 Leader: add photos"):
+        pw = st.text_input("Leader passphrase", type="password", key="intub_leader_pw")
+        if pw == LEADER_PASSPHRASE:
+            have = {p.get("stage") for p in list_photos()}
+            st.caption("Stages: " + ", ".join(
+                f"{'✅' if s_['key'] in have else '⬜'} {s_['key']}" for s_ in PHOTO_STAGES))
+            st.markdown("**Whole series at once:** ZIP of images named `<stage>_01.jpg`, "
+                        "`<stage>_02.jpg`, … (lower number plays first).")
+            zfile = st.file_uploader("ZIP of photos", type=["zip"], key="intub_zip")
+            if st.button("📦 Import ZIP", key="intub_zip_import"):
+                if not zfile:
+                    st.error("Choose a ZIP file first.")
+                else:
+                    matched, skipped = import_zip_bulk(zfile.read())
+                    if matched:
+                        st.success(f"✅ Saved: {', '.join(matched)}")
+                    if skipped:
+                        st.warning(f"Skipped (name didn't match a stage key, or not an image): {', '.join(skipped)}")
+                    if matched:
+                        st.rerun()
+            st.markdown(f"**One photo** — added to the end of *{stage['title']}*:")
+            up = st.file_uploader("Photo (JPG/PNG) — an image you hold rights to",
+                                  type=["jpg", "jpeg", "png"], key=f"intub_upl_{stage['key']}")
+            note = st.text_input("Teaching note (optional)", key=f"intub_note_{stage['key']}")
+            if st.button("💾 Save photo", key=f"intub_save_{stage['key']}"):
+                if not up:
+                    st.error("Choose an image file first.")
+                else:
+                    seq = _next_seq(stage["key"])
+                    save_photo({
+                        "photo_id": f"intub_{int(time.time()*1000)}_{stage['key']}_{seq:02d}",
+                        "stage": stage["key"], "seq": seq, "name": stage["title"],
+                        "diagnosis_note": note.strip() or "Real intubation photo provided by course leader.",
+                        "image_b64": _shrink_to_jpeg_b64(up.read()),
+                    })
+                    st.success("✅ Saved.")
+                    st.rerun()
+        elif pw:
+            st.error("Wrong passphrase.")
 
 STEPS = [
     {"title": "1. Pre-oxygenate", "note": "100% O2 by mask for 3-5 min before attempting. Position: sniffing position, ear-to-sternal-notch alignment.",
@@ -156,6 +356,21 @@ def render(student_id: str):
             "simulated resistance or tactile feedback — that needs a physical manikin."
         )
 
+    view_mode = st.radio(
+        "Anatomy view",
+        ["📷 Real photo series (plays all frames in order)",
+         "🏥 Schematic OR room (orbit/zoom/pan)", "🫁 Real anatomy (CT-derived model)"],
+        horizontal=True, key="intub_view_mode",
+        help="The photo series plays real intubation photos frame by frame. The schematic room is "
+             "fully free-roam 3D. The real model is a genuine CT-derived airway from University of "
+             "Dundee School of Medicine — NonCommercial license, so it must not be shown inside any "
+             "tuition/paid program (e.g. the ASHM Fellowship) without written permission from Dundee first.",
+    )
+    if view_mode.startswith("📷"):
+        _render_photo_series()
+        st.caption("The 7-step guide and safety quiz are in the '🏥 Schematic OR room' view.")
+        return
+
     step_idx = st.session_state.get("intub_step", 0)
 
     cols = st.columns([1, 4, 1])
@@ -172,14 +387,6 @@ def render(student_id: str):
     with cols[1]:
         st.progress((step_idx + 1) / len(STEPS), text=f"Step {step_idx+1} of {len(STEPS)}: {step['title']}")
 
-    view_mode = st.radio(
-        "Anatomy view", ["🏥 Schematic OR room (orbit/zoom/pan)", "🫁 Real anatomy (CT-derived model)"],
-        horizontal=True, key="intub_view_mode",
-        help="The schematic room is fully free-roam 3D. The real model is a genuine CT-derived "
-             "airway from University of Dundee School of Medicine — NonCommercial license, so it "
-             "must not be shown inside any tuition/paid program (e.g. the ASHM Fellowship) without "
-             "written permission from Dundee first.",
-    )
     if view_mode.startswith("🫁"):
         st.caption("Real CT-derived airway anatomy — © University of Dundee School of Medicine, "
                    "CC BY-NC-SA 4.0. Educational, non-commercial use only. "
